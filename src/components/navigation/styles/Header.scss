@@ -1,0 +1,61 @@
+@import '../../../assets/styles/vars.scss';
+
+.vsf-header {
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+
+  .navbar {
+    box-shadow: 0 2px 3px $navShadow;
+    padding: 10px 0;
+    background-color: $primary;
+
+    &-end {
+      padding-right: 15px;
+    }
+
+    .navbar-item a,
+    a.navbar-item {
+      color: $orange;
+      border-bottom: 1px solid $primary;
+
+      &:hover {
+        background: $primary;
+        border-bottom: 1px solid $orange;
+      }
+    }
+
+    &-link::after {
+      border-color: white;
+    }
+
+    .navbar-item.has-dropdown:hover .navbar-link,
+    .navbar-item.has-dropdown.is-active .navbar-link {
+      background-color: $primary;
+    }
+
+    #link-brand {
+      &:hover {
+        background-color: $primary;
+        border-bottom: 1px solid $primary;
+      }
+    }
+  }
+
+  .title {
+    color: $orange;
+  }
+
+  .navbar-burger {
+    position: absolute;
+    left: 0;
+    color: $orange;
+  }
+
+  @media (max-width: 768px) {
+    .navbar {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

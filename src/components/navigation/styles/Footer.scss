@@ -1,0 +1,14 @@
+@import '../../../assets/styles/vars.scss';
+
+.vsf-footer {
+  margin-top: 50px;
+  max-height: 305px;
+
+  &__user-link {
+    color: #fab23a;
+  }
+
+  &__disclaimer {
+    font-size: 8px;
+  }
+}

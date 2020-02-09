@@ -1,0 +1,45 @@
+@import '../../../assets/styles/vars.scss';
+
+.vsf-league {
+  margin-top: 50px;
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-radius: 6px;
+    border: 1px solid lightgray;
+    padding: 12px;
+    margin-top: 25px;
+
+    &:hover {
+      border-color: $orange;
+      cursor: pointer;
+    }
+  }
+
+  &__content {
+    // display: flex;
+    // justify-content: space-between;
+    // flex-wrap: wrap;
+  }
+
+  &__name {
+    font-weight: bold;
+  }
+
+  &__actions {
+    .button {
+      margin-right: 15px;
+    }
+  }
+
+  &__tag {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  &__settings {
+    width: 100%;
+  }
+}

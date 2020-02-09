@@ -1,0 +1,19 @@
+.league-modifer-modal {
+  &__note {
+    font-size: 10px;
+    line-height: 1;
+    padding-bottom: 5px;
+  }
+  .nfx__divider {
+    padding: 10px;
+  }
+  .modal-card-foot {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+@media (max-width: 768px) {
+  .modal-card {
+    margin: 0;
+  }
+}

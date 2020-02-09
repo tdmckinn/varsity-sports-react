@@ -1,0 +1,28 @@
+.vsf-slide {
+  .siema {
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .siema-slide {
+    height: 200px;
+    color: white;
+    font-size: 23px;
+
+    @media (max-width: 768px) {
+      height: 300px;
+
+      .title {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .hero-body {
+    background-color: black;
+
+    .title {
+      color: #fff;
+    }
+  }
+}

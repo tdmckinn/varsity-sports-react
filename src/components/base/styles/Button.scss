@@ -1,0 +1,12 @@
+@import '../../../assets/styles/vars.scss';
+
+.vsf-button {
+  .material-icons {
+    padding-left: 5px;
+  }
+
+  &.is-alt {
+    background-color: $orange;
+    border-color: $orange;
+  }
+}
