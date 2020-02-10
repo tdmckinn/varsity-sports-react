@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import gql from 'graphql-tag'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { useMutation, useQuery } from 'urql';
 
 import {
@@ -13,39 +12,14 @@ import {
   FieldSet,
   LeagueModiferModal,
 } from '../../components'
-import { AuthStore, Stores } from '../../stores'
 import { ILeague } from '../../components/league/League'
+import {getLeagues} from '../../queries/league'
 
 import './Leagues.scss'
+import { useStores } from '../../hooks/use-stores';
 
-interface LeaguesProps {
-  authStore: AuthStore
-}
-
+interface LeaguesProps {}
 interface LeaguesState { }
-
-const getLeagues = gql`
-query GetLeagues() {
-  leagues {
-    id
-    DraftDateTime
-    LeagueName
-    CommissionerID
-    LeagueSettings {
-      DraftType
-      Scoring
-      MaxTeams
-      WaiverType
-      RosterPositions
-      TradeDeadline
-    }
-    LeagueTeams {
-      id
-      OwnerID
-    }
-  }
-}
-`
 
 const joinLeague = `
 mutation($input: JoinLeagueInput!) {
@@ -56,16 +30,13 @@ mutation($input: JoinLeagueInput!) {
   }
 }
 `
-
-const Leagues = inject(({ stores }: { stores: Stores }) => ({
-  authStore: stores.authStore as AuthStore,
-}))
-observer(({ authStore }: LeaguesProps) => {
+const Leagues = observer(() => {
   const [{ fetching, error, data }] = useQuery({
     query: getLeagues
   });
   const [joinLeagueResponse, executeJoinLeagueMutation] = useMutation(joinLeague);
 
+  console.log(joinLeagueResponse)
   if (fetching) {
     return <div>"Loading..."</div>;
   } else if (error) {
@@ -77,6 +48,7 @@ observer(({ authStore }: LeaguesProps) => {
   const [leagueToJoinId, setLeagueToJoinId] = React.useState('')
   const [newTeam, setNewTeam] = React.useState({ name: '' })
 
+  const { authStore } = useStores();
   const leagues = data.leagues;
   const user = authStore.user;
 

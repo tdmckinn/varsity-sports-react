@@ -1,21 +1,22 @@
 import * as React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { observer, inject } from 'mobx-react'
-import { AuthStore, Stores } from '../stores'
+
+import { useStores } from '../hooks/use-stores';
 
 interface PrivateRouteProps {
-  authStore?: AuthStore
   component: any
   path: string
   exact?: boolean
 }
 
-function PrivateRoute({
+const PrivateRoute = observer(({
   component: Component,
   exact,
   path,
-  authStore,
-}: PrivateRouteProps) {
+}: PrivateRouteProps) => {
+  const { authStore } = useStores();
+
   return (
     <Route
       exact={exact || false}
@@ -24,15 +25,13 @@ function PrivateRoute({
         authStore!.isAuthenticated === true ? (
           <Component {...props} />
         ) : (
-          <Redirect
-            to={{ pathname: '/login', state: { from: props.location } }}
-          />
-        )
+            <Redirect
+              to={{ pathname: '/login', state: { from: props.location } }}
+            />
+          )
       }
     />
   )
-}
+})
 
-export default inject(({ stores }: { stores: Stores }) => ({
-  authStore: stores.authStore as AuthStore,
-}))(observer(PrivateRoute))
+export default PrivateRoute

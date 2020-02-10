@@ -16,7 +16,6 @@ const Dashboard = ({ gameWeek = 1, gameInfo = {}, slides = [] }: any) => (
       gameInfo.Games.map((game: any) => (
         <section
           className="vsf-dashboard__games"
-          v-for="game in"
           key={game.gameId}
         >
           <div>

@@ -2,18 +2,17 @@ import * as React from 'react'
 import { Formik } from 'formik'
 import flatpickr from 'flatpickr'
 import gql from 'graphql-tag'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 
 import { Button, Modal, FieldSet, Input, LeagueSettings } from '..'
-import { Stores, AuthStore } from '../../stores'
 
 import './styles/LeagueModiferModal.scss'
+import { useStores } from '../../hooks/use-stores'
 
 interface LeagueModifierModalProps {
   modalTitle?: string
   teamName?: string
   isSettingsEditMode?: boolean
-  authStore?: AuthStore
 }
 
 const SETTINGS_QUERY = gql`
@@ -33,9 +32,6 @@ const SETTINGS_QUERY = gql`
   }
 `
 
-@inject(({ stores }: { stores: Stores }) => ({
-  authStore: stores.authStore as AuthStore,
-}))
 @observer
 class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
   state = {
@@ -54,7 +50,8 @@ class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
   } as any
 
   get user() {
-    return this.props.authStore!.user
+   const {authStore} =  useStores();
+    return authStore!.user
   }
 
   get modalTitle() {

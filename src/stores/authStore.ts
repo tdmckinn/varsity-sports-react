@@ -42,12 +42,12 @@ export class AuthStore {
       container: 'body',
     })
 
-    if (!authStore!.isAuthenticated) {
+    if (!this.isAuthenticated) {
       netlifyIdentity.open('signup')
 
       netlifyIdentity.on('login', (user: any) => {
         this.setUser({
-          ...authStore!.user,
+          ...this.user,
           ...{
             email: user.email,
             id: user.id,
@@ -65,7 +65,3 @@ export class AuthStore {
     netlifyIdentity.logout()
   }
 }
-
-const authStore = new AuthStore()
-
-export default authStore

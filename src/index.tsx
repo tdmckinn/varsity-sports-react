@@ -4,10 +4,8 @@ import { Provider as UrqlProvider } from 'urql'
 import { Router } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import { configure } from 'mobx'
-import { Provider } from 'mobx-react'
 
 import { client } from './gqlClient'
-import * as stores from './stores'
 import App from './App'
 
 import './index.scss'
@@ -18,11 +16,9 @@ configure({ enforceActions: 'observed' })
 
 ReactDOM.render(
   <UrqlProvider value={client}>
-    <Provider stores={stores}>
       <Router history={createBrowserHistory()}>
         <App />
       </Router>
-    </Provider>
   </UrqlProvider>,
   document.getElementById('root')
 )

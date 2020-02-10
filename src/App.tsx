@@ -5,23 +5,19 @@ import {
   Switch,
   RouteComponentProps,
 } from 'react-router-dom'
-// import DevTools from 'mobx-react-devtools'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 
 import { Header, Footer, LoadingSpinner, ThemeMusic, Login } from './components'
 import PrivateRoute from './router/PrivateRoute'
-import { Stores, AuthStore } from './stores'
+import { useStores } from './hooks/use-stores'
 
 import './App.scss'
 
 interface AppProps extends RouteComponentProps<any>, React.Props<any> {
   isUserDraftLoading?: boolean
-  authStore?: AuthStore
 }
 
-interface AppState {}
-
-// const isDevelopment = process.env.NODE_ENV === 'development'
+interface AppState { }
 
 const NotFoundComponent = () => (
   <section className="hero">
@@ -36,7 +32,6 @@ const NotFoundComponent = () => (
   </section>
 )
 
-// @see: https://github.com/ReactTraining/react-router/issues/6420
 const Dashboard = React.lazy(() =>
   import('./pages/dashboard/Dashboard' /* webpackChunkName: "dashboard" */)
 )
@@ -56,65 +51,57 @@ const Leagues = React.lazy(() =>
 // const NfxDraft = React.lazy(() =>
 //   import('./components/draft/NfxDraft' /* webpackChunkName: "nfx-draft-live" */))
 
-@inject(({ stores }: { stores: Stores }) => ({
-  authStore: stores.authStore as AuthStore,
-}))
-@observer
-class App extends React.Component<AppProps, AppState> {
-  componentDidMount() {
-    const {authStore} = this.props
+const App = observer(({ isUserDraftLoading }: AppProps) => {
+  const { authStore } = useStores();
+
+  React.useEffect(() => {
     if (authStore) {
       authStore.login()
     }
-  }
+  }, [])
 
-  render() {
-    const {
-      authStore: { user },
-      isUserDraftLoading,
-    } = this.props
-    return (
-      <>
-        <div className="vsf-app app">
-          {/* {isDevelopment ? <DevTools /> : ''} */}
-          <Header user={user} />
-          {user.isLoggedIn ? (
-            <main className="vsf-app__main container is-fluid">
-              <React.Suspense fallback={<LoadingSpinner />}>
-                <Switch>
-                  <PrivateRoute path="/dashboard" component={Dashboard} />
-                  <PrivateRoute path="/leagues" component={Leagues} />
-                  <Route
-                    path="/"
-                    exact
-                    render={(props) => <Dashboard {...props} />}
-                  />
-                  <Route path="*" exact component={NotFoundComponent} />
-                </Switch>
-              </React.Suspense>
-            </main>
-          ) : (
+  const { authStore: { user } } = useStores();
+
+  return (
+    <>
+      <div className="vsf-app app">
+        <Header />
+        {user.isLoggedIn ? (
+          <main className="vsf-app__main container is-fluid">
+            <React.Suspense fallback={<LoadingSpinner />}>
+              <Switch>
+                <PrivateRoute path="/dashboard" component={Dashboard} />
+                <PrivateRoute path="/leagues" component={Leagues} />
+                <Route
+                  path="/"
+                  exact
+                  render={(props) => <Dashboard {...props} />}
+                />
+                <Route path="*" exact component={NotFoundComponent} />
+              </Switch>
+            </React.Suspense>
+          </main>
+        ) : (
             <main className="vsf-app__main--login">
               <Login />
             </main>
           )}
-          <Footer>
-            <ThemeMusic />
-          </Footer>
-          {isUserDraftLoading ? (
-            <div className="vsf-loading--fullscreen">
-              <h2 className="vsf-loading__header">vsf FANTASY</h2>
-              <div>Loading Draft Please Wait...</div>
-              <LoadingSpinner />
-            </div>
-          ) : (
+        <Footer>
+          <ThemeMusic />
+        </Footer>
+        {isUserDraftLoading ? (
+          <div className="vsf-loading--fullscreen">
+            <h2 className="vsf-loading__header">vsf FANTASY</h2>
+            <div>Loading Draft Please Wait...</div>
+            <LoadingSpinner />
+          </div>
+        ) : (
             ''
           )}
-        </div>
-        <div id="vsf-modal-root" data-cy="vs-modal-root" />
-      </>
-    )
-  }
-}
+      </div>
+      <div id="vsf-modal-root" data-cy="vs-modal-root" />
+    </>
+  )
+})
 
 export default withRouter(App)
