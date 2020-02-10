@@ -8,7 +8,7 @@
       "es7",  
       "esnext"
     ],
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "allowJs": true,
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
@@ -32,6 +32,6 @@
     "webpack"
   ],
   "include": [
-    "src"
+    "src/"
   ]
 }
