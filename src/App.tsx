@@ -75,7 +75,7 @@ const App = observer(({ isUserDraftLoading }: AppProps) => {
                 <Route
                   path="/"
                   exact
-                  render={(props) => <Dashboard {...props} />}
+                  render={(props) => <Dashboard />}
                 />
                 <Route path="*" exact component={NotFoundComponent} />
               </Switch>

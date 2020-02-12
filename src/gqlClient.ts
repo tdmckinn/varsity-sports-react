@@ -7,7 +7,7 @@ import {
   subscriptionExchange,
 } from 'urql'
 
-const subscriptionClient = new SubscriptionClient(
+ const subscriptionClient = new SubscriptionClient(
   process.env.REACT_APP_GRAPHQL_WS_URL!,
   {}
 )
