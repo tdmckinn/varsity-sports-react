@@ -5,7 +5,7 @@ import { DRAFT_DATE_TIME_FORMAT } from '../../const'
 
 import './styles/League.scss'
 
-export interface ILeague {
+export interface League {
   id: number
   DraftID: number
   DraftDateTime: string
@@ -20,7 +20,7 @@ export interface ILeague {
 }
 
 interface LeagueProps {
-  league: ILeague
+  league: League
   actions?: JSX.Element
   children?: any
 }

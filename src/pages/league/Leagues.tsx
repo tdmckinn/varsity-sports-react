@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { useMutation, useQuery } from 'urql';
 
+import './Leagues.scss'
+
 import {
   League,
   SectionHeader,
@@ -12,29 +14,34 @@ import {
   FieldSet,
   LeagueModiferModal,
 } from '../../components'
-import { ILeague } from '../../components/league/League'
+import { League as ILeague } from '../../components/league/League'
 import {getLeagues} from '../../queries/league'
 
-import './Leagues.scss'
 import { useStores } from '../../hooks/use-stores';
 
 interface LeaguesProps {}
-interface LeaguesState { }
+interface LeaguesState {}
 
 const joinLeague = `
-mutation($input: JoinLeagueInput!) {
-  joinLeague(input: $input) {
-    id
-    LeagueID
-    OwnerID
+  mutation($input: JoinLeagueInput!) {
+    joinLeague(input: $input) {
+      id
+      LeagueID
+      OwnerID
+    }
   }
-}
 `
 const Leagues = observer(() => {
+  const { authStore } = useStores();
+
   const [{ fetching, error, data }] = useQuery({
     query: getLeagues
   });
   const [joinLeagueResponse, executeJoinLeagueMutation] = useMutation(joinLeague);
+  const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(false)
+  const [isJoinLeagueModalActive, setJoinLeagueDisplay] = React.useState(false)
+  const [leagueToJoinId, setLeagueToJoinId] = React.useState('')
+  const [newTeam, setNewTeam] = React.useState({ name: '' })
 
   console.log(joinLeagueResponse)
   if (fetching) {
@@ -43,12 +50,6 @@ const Leagues = observer(() => {
     return <div>":( Couldn't load leagues try again"</div>;
   }
 
-  const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(false)
-  const [isJoinLeagueModalActive, setJoinLeagueDisplay] = React.useState(false)
-  const [leagueToJoinId, setLeagueToJoinId] = React.useState('')
-  const [newTeam, setNewTeam] = React.useState({ name: '' })
-
-  const { authStore } = useStores();
   const leagues = data.leagues;
   const user = authStore.user;
 
@@ -129,7 +130,7 @@ const Leagues = observer(() => {
         </nav>
         {leagues.map((league: any, index: number) => (
           <League key={index} league={league}>
-            <div className="nfx-league__actions">
+            <div className="vsf-league__actions">
               <Link
                 className="button is-success"
                 to={`/leagues/${league.id}`}
@@ -149,8 +150,8 @@ const Leagues = observer(() => {
                 disabled
               />
             </div>
-            <div className="nfx-league__settings">
-              <div className="nfx__divider" />
+            <div className="vsf-league__settings">
+              <div className="vsf__divider" />
               <span>
                 <i className="material-icons">perm_data_setting</i>
               </span>{' '}
@@ -183,7 +184,7 @@ const Leagues = observer(() => {
                 Close
                 </a>
               <Button text="Save" alt click={() => {
-                if (!newTeam) {
+                if (!newTeam.name) {
                   console.log('Must enter team name')
                   return false;
                 }

@@ -6,16 +6,17 @@ import './styles/Button.scss'
 interface ButtonProps {
   className?: string
   text?: string
-  click: () => void
+  click?: () => void
   alt?: boolean
   disabled?: boolean
   title?: string
   children?: any
+  type?: string
 }
 
-const Button = ({ alt, children, click, text, disabled }: ButtonProps) => (
+const Button = ({ alt, children, click, text, type = "button", disabled, ...props }: ButtonProps) => (
   <button
-    type="button"
+    type={type}
     className={cx('vsf-button button', {
       'is-primary': !alt,
       'is-alt': alt,
@@ -26,6 +27,7 @@ const Button = ({ alt, children, click, text, disabled }: ButtonProps) => (
         click()
       }
     }}
+    {...props}
   >
     {text}
     {children ? <div className="vsf-button__slot">{children}</div> : ''}

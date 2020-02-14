@@ -1,66 +1,51 @@
 import * as React from 'react'
 import { Formik } from 'formik'
 import flatpickr from 'flatpickr'
-import gql from 'graphql-tag'
+import { useMutation, useQuery } from 'urql';
 import { observer } from 'mobx-react'
 
-import { Button, Modal, FieldSet, Input, LeagueSettings } from '..'
-
 import './styles/LeagueModiferModal.scss'
+
+import { Button, Modal, FieldSet, Input, LeagueSettings } from '..'
 import { useStores } from '../../hooks/use-stores'
+import { getSettings } from '../../queries/settings';
 
-interface LeagueModifierModalProps {
-  modalTitle?: string
-  teamName?: string
-  isSettingsEditMode?: boolean
-}
-
-const SETTINGS_QUERY = gql`
-  {
-    settings {
-      id
-      type
-      text
-      value
-      values {
-        id
-        value
-      }
-      singleValues
-      readOnly
-    }
+const createLeagueMutation = `
+mutation($league: CreateLeagueInput!) {
+  createLeague(league: $league) {
+    id
+    CommissionerID
+    LeagueName
   }
+}
 `
 
-@observer
-class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
-  state = {
+const LeagueModifierModal = observer(() => {
+  const { authStore: { user } } = useStores();
+  const [{ fetching, error, data }] = useQuery({
+    query: getSettings
+  })
+  const [joinLeagueResponse, executeCreateLeagueMutation] = useMutation(createLeagueMutation);
+  const [league, setLeague] = React.useState({
     leagueId: null,
     isSettingsEditMode: false,
     leagueSettings: {},
     settings: [],
     leagueName: {
       value: '',
-      isFocusOnMount: true,
+      isFocusOnMount: true
     },
     draftDateTime: '',
     teamName: '',
-    commissionerName: 'user.fullName',
-    isValidForm: true,
-  } as any
+    commissionerName: user.fullName,
+    isValidForm: true
+  })
 
-  get user() {
-   const {authStore} =  useStores();
-    return authStore!.user
-  }
+  const modalTitle = league.isSettingsEditMode
+    ? `Edit League Settings - ${league.teamName}`
+    : 'Create New League'
 
-  get modalTitle() {
-    return this.state.isSettingsEditMode
-      ? `Edit League Settings - ${this.state.leagueName.value}`
-      : 'Create New League'
-  }
-
-  componentDidMount() {
+  React.useEffect(() => {
     const datePickerEl = document.querySelector(
       '#leagueModiferDraftDateTimer input'
     ) as HTMLElement
@@ -71,39 +56,34 @@ class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
         enableTime: true,
       })
     }
-  }
+  }, [])
 
-  close() {
-    this.resetData()
-  }
 
-  resetData() {
-    this.state.leagueId = null
-    this.state.isSettingsEditMode = false
-    this.state.leagueSettings = {}
-    this.state.settings = []
-    this.state.leagueName = {
-      ...{
-        value: '',
-        isFocusOnMount: true,
-      },
-    }
-    this.state.draftDateTime = ''
-    this.state.commissionerName = ''
-    this.state.isValidForm = true
-  }
-
-  createLeague() {
+  const userCreateLeague = (leagueFormValues: any) => {
     /**
      * TODO: Validations
      */
     const newLeague = {
-      CommissionerID: this.user.id,
-      LeagueName: this.state.leagueName.value,
-      CommissionerName: this.state.commissionerName,
+      CommissionerID: user.id,
+      LeagueName: leagueFormValues.name,
+      CommissionerName: leagueFormValues.commissionerName,
       // DraftDateTime: FormData(new Date(this.draftDateTime), 'YYYY-MM-dd HH:mm'),
-      TeamName: this.state.teamName,
+      TeamName: leagueFormValues.teamName,
     }
+
+    executeCreateLeagueMutation({
+      league: newLeague
+    })
+      .then(({ data: { createLeague } }: any) => {
+        console.log(createLeague)
+        alert('League saved continue editing...')
+
+        setLeague({
+          ...league,
+          leagueId: createLeague.id,
+          isSettingsEditMode: true
+        })
+      })
 
     //  this.$apollo
     //     .mutate({
@@ -128,8 +108,8 @@ class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
     //     })
   }
 
-  saveLeagueSettings() {
-    const readonlySettings: any = this.state.settings
+  const saveLeagueSettings = () => {
+    const readonlySettings: any = league.settings
       .filter(({ readOnly }: any) => readOnly)
       .map(({ id, value, values, singleValues }: any) => {
         return { [id]: value || values || singleValues }
@@ -141,8 +121,8 @@ class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
       }, {})
 
     const updatedSettings = {
-      LeagueID: this.state.leagueId,
-      ...this.state.leagueSettings,
+      LeagueID: league.leagueId,
+      ...league.leagueSettings,
       ...readonlySettings,
     }
 
@@ -165,23 +145,28 @@ class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
     //   })
   }
 
-  render() {
-    const { modalTitle, teamName, isSettingsEditMode } = this.props
-
-    return (
-      <Modal isAcitve>
-        <div className="league-modifer-modal modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">{modalTitle}</p>
-            <button className="delete" onClick={() => console.log('close')} />
-          </header>
-          <section className="modal-card-body">
-            <p className="league-modifer-modal__note">
-              * Note once you create a new league you will automatically have an
-              associated team created. Team details can be changed later.
+  return (
+    <Modal isAcitve>
+      <div className="league-modifer-modal modal-card">
+        <header className="modal-card-head">
+          <p className="modal-card-title">{modalTitle}</p>
+          <button className="delete" onClick={() => console.log('close')} />
+        </header>
+        <section className="modal-card-body">
+          <p className="league-modifer-modal__note">
+            * Note once you create a new league you will automatically have an
+            associated team created. Team details can be changed later.
             </p>
+          <Formik
+            initialValues={{ name: "" }}
+            onSubmit={async values => {
+              await new Promise(resolve => setTimeout(resolve, 500));
+              console.log("VAUES >>>", values)
+              userCreateLeague(values)
+            }}
+          >
             <form>
-              {!isSettingsEditMode ? (
+              {!league.isSettingsEditMode ? (
                 <div>
                   <FieldSet text="League Name">
                     <Input
@@ -202,7 +187,7 @@ class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
                   </FieldSet>
                   <div className="vsf__divider" />
                   <h5 className="title is-5">
-                    Team: <span>{teamName}</span>
+                    Team: <span>{league.teamName}</span>
                   </h5>
                   <FieldSet text="Team Name">
                     <Input value="teamName" placeholder="Team Name Here" />
@@ -210,31 +195,32 @@ class LeagueModifierModal extends React.Component<LeagueModifierModalProps> {
                   <div className="vsf__divider" />
                 </div>
               ) : (
-                <div>
-                  League Settings
+                  <div>
+                    League Settings
                   {/* <LeagueSettings defaultSettingsConfig={settings} leagueSettings={leagueSettings} /> */}
-                </div>
-              )}
+                  </div>
+                )}
             </form>
-          </section>
-          <footer className="modal-card-foot">
-            <a className="button" onClick={() => console.log('close')}>
-              Cancel
+          </Formik>
+        </section>
+        <footer className="modal-card-foot">
+          <a className="button" onClick={() => console.log('close')}>
+            Cancel
             </a>
-            {isSettingsEditMode ? (
-              <Button
-                text="Save Settings"
-                click={() => 'saveLeagueSettings'}
-                alt
-              />
-            ) : (
-              <Button text="Submit" click={() => 'createLeague'} alt />
+          {league.isSettingsEditMode ? (
+            <Button
+              type="submit"
+              text="Save Settings"
+              click={saveLeagueSettings}
+              alt
+            />
+          ) : (
+              <Button type="submit" text="Submit" alt />
             )}
-          </footer>
-        </div>
-      </Modal>
-    )
-  }
-}
+        </footer>
+      </div>
+    </Modal>
+  )
+})
 
 export default LeagueModifierModal
