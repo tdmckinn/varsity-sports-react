@@ -15,12 +15,12 @@ import {
   LeagueModiferModal,
 } from '../../components'
 import { League as ILeague } from '../../components/league/League'
-import {getLeagues} from '../../queries/league'
+import { getLeagues } from '../../queries/league'
 
 import { useStores } from '../../hooks/use-stores';
 
-interface LeaguesProps {}
-interface LeaguesState {}
+interface LeaguesProps { }
+interface LeaguesState { }
 
 const joinLeague = `
   mutation($input: JoinLeagueInput!) {
@@ -115,7 +115,7 @@ const Leagues = observer(() => {
           <div className="level-right">
             <p className="level-item">
               <Button
-                className="is-success"
+                classes="is-success"
                 text="Create League"
                 disabled={hasMaxLeaguesCreated()}
                 title={hasMaxLeaguesCreated()
@@ -189,8 +189,8 @@ const Leagues = observer(() => {
                   return false;
                 }
                 executeJoinLeagueMutation({ id: leagueToJoinId, LeagueID: newTeam, OwnerID: user.id })
-              }
-              } />
+              }}
+              />
             </footer>
           </div>
         </Modal>

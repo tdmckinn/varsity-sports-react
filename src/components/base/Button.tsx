@@ -4,7 +4,7 @@ import cx from 'classnames'
 import './styles/Button.scss'
 
 interface ButtonProps {
-  className?: string
+  classes?: string
   text?: string
   click?: () => void
   alt?: boolean
@@ -14,13 +14,13 @@ interface ButtonProps {
   type?: string
 }
 
-const Button = ({ alt, children, click, text, type = "button", disabled, ...props }: ButtonProps) => (
+const Button = ({ alt, children, classes, click, text, type = "button", disabled, ...props }: ButtonProps) => (
   <button
     type={type}
     className={cx('vsf-button button', {
       'is-primary': !alt,
       'is-alt': alt,
-    })}
+    }, classes)}
     disabled={disabled}
     onClick={() => {
       if (click) {

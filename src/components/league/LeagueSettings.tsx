@@ -1,9 +1,11 @@
-import * as react from 'react'
-import { Formik } from 'formik'
-
-import { Input, FieldSet, Select } from '..'
+import * as React from 'react'
+import { Field } from 'formik'
+import { useQuery } from 'urql';
 
 import './styles/LeagueSettings.scss'
+
+import { Input, FieldSet, Select } from '..'
+import { getSettings } from '../../queries/settings';
 
 interface SettingsConfig {
   id?: string
@@ -15,21 +17,25 @@ interface SettingsConfig {
   singleValues: any
 }
 
-interface LeagueSettingsProps {
-  defaultSettingsConfig: any
-}
+const LeagueSettings = ({ leagueSettings }: any) => {
+  const [{ fetching, error, data }] = useQuery({
+    query: getSettings
+  })
 
-const LeagueSettings = ({
-  defaultSettingsConfig = [],
-}: LeagueSettingsProps) => (
-  <div className="league-settings">
-    <h5 className="league-settings__title title is-5">
-      League Configuration / Draft Settings
+  if (fetching) {
+    return <div>"Loading..."</div>;
+  } else if (error || !data.settings) {
+    return <div>":( Couldn't load leagues try again"</div>;
+  }
+
+  return (
+    <div className="league-settings">
+      <h5 className="league-settings__title title is-5">
+        League Configuration / Draft Settings
     </h5>
-    {defaultSettingsConfig.length !== 0 ? (
-      <form>
+      {data.settings.length !== 0 ? (
         <div>
-          {defaultSettingsConfig.map(
+          {data.settings.map(
             (
               {
                 id,
@@ -42,57 +48,58 @@ const LeagueSettings = ({
               }: SettingsConfig,
               index: number
             ) => {
-              let configElement = null
-              switch (type) {
-                case 'dropdown':
-                  configElement = (
-                    <Select
-                      id={id}
-                      options={values}
-                      v-model="leagueSettings[config.id]"
-                      placeholder="Select Item"
-                    />
-                  )
-                  break
-                case 'input':
-                  configElement = (
-                    <Input
-                      type="text"
-                      disabled={readOnly}
-                      placeholder={value}
-                      v-model="leagueSettings[config.id]"
-                    />
-                  )
 
-                  break
-                // case 'radio':
-                //   // configElement = <RadioControl id={id} options={values} v-model="leagueSettings[config.id]" />
-                //   break;
-                case 'other':
-                  configElement = (
-                    <Input
-                      type="text"
-                      disabled={readOnly}
-                      placeholder={singleValues.join(',')}
-                      v-model="leagueSettings[config.id]"
-                    />
-                  )
-                  break
+              const getSettingElement = () => {
+                switch (type) {
+                  case 'dropdown':
+                    return (
+                      <Select
+                        id={id}
+                        options={values}
+                        value={leagueSettings}
+                        placeholder="Select Item"
+                      />
+                    )
+                  case 'input':
+                    return (
+                      <Input
+                        type="text"
+                        disabled={readOnly}
+                        placeholder={value}
+                        value="leagueSettings[config.id]"
+                      />
+                    )
+                  // case 'radio':
+                  //   // configElement = <RadioControl id={id} options={values} v-model="leagueSettings[config.id]" />
+                  //   break;
+                  case 'other':
+                    return (
+                      <Input
+                        type="text"
+                        disabled={readOnly}
+                        placeholder={singleValues.join(',')}
+                        v-model="leagueSettings[config.id]"
+                      />
+                    )
+                  default:
+                    return null
+                }
               }
 
-              return (
+              const settingsElement = getSettingElement()
+
+              return settingsElement ? (
                 <FieldSet key={id} text={text}>
-                  {configElement}
+                  {settingsElement}
                 </FieldSet>
-              )
+              ) : null
             }
           )}
         </div>
-      </form>
-    ) : (
-      ''
-    )}
-  </div>
-)
-
+      ) : (
+          ''
+        )}
+    </div>
+  )
+}
 export default LeagueSettings
