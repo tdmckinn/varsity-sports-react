@@ -62,11 +62,12 @@ const LeagueSettings = ({ leagueSettings }: any) => {
                     )
                   case 'input':
                     return (
-                      <Input
+                      <Field
                         type="text"
                         disabled={readOnly}
                         placeholder={value}
                         value="leagueSettings[config.id]"
+                        component={Input}
                       />
                     )
                   // case 'radio':
@@ -74,11 +75,12 @@ const LeagueSettings = ({ leagueSettings }: any) => {
                   //   break;
                   case 'other':
                     return (
-                      <Input
+                      <Field
                         type="text"
                         disabled={readOnly}
                         placeholder={singleValues.join(',')}
                         v-model="leagueSettings[config.id]"
+                        component={Input}
                       />
                     )
                   default:

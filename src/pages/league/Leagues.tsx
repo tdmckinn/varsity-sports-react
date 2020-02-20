@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
-import { useMutation, useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql'
 
 import './Leagues.scss'
 
@@ -17,10 +17,10 @@ import {
 import { League as ILeague } from '../../components/league/League'
 import { getLeagues } from '../../queries/league'
 
-import { useStores } from '../../hooks/use-stores';
+import { useStores } from '../../hooks/use-stores'
 
-interface LeaguesProps { }
-interface LeaguesState { }
+interface LeaguesProps {}
+interface LeaguesState {}
 
 const joinLeague = `
   mutation($input: JoinLeagueInput!) {
@@ -32,38 +32,41 @@ const joinLeague = `
   }
 `
 const Leagues = observer(() => {
-  const { authStore } = useStores();
+  const { authStore } = useStores()
 
   const [{ fetching, error, data }] = useQuery({
-    query: getLeagues
-  });
-  const [joinLeagueResponse, executeJoinLeagueMutation] = useMutation(joinLeague);
-  const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(false)
+    query: getLeagues,
+  })
+  const [joinLeagueResponse, executeJoinLeagueMutation] = useMutation(
+    joinLeague
+  )
+  const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(
+    false
+  )
   const [isJoinLeagueModalActive, setJoinLeagueDisplay] = React.useState(false)
   const [leagueToJoinId, setLeagueToJoinId] = React.useState('')
   const [newTeam, setNewTeam] = React.useState({ name: '' })
 
   console.log(joinLeagueResponse)
   if (fetching) {
-    return <div>"Loading..."</div>;
+    return <div>"Loading..."</div>
   } else if (error) {
-    return <div>":( Couldn't load leagues try again"</div>;
+    return <div>":( Couldn't load leagues try again"</div>
   }
 
-  const leagues = data.leagues;
-  const user = authStore.user;
+  const leagues = data.leagues
+  const user = authStore.user
 
   const hasMaxLeaguesCreated = () => {
     return (
       leagues &&
-      leagues.filter(
-        (league: any) => league.CommissionerID === user.id
-      ).length === 5
+      leagues.filter((league: any) => league.CommissionerID === user.id)
+        .length === 5
     )
   }
 
   const displayJoinLeagueModal = (id: any) => {
-    setJoinLeagueDisplay(true);
+    setJoinLeagueDisplay(true)
     setLeagueToJoinId(id)
   }
 
@@ -75,7 +78,6 @@ const Leagues = observer(() => {
       )
     )
   }
-
 
   const editLeague = () => {
     // TODO: Implement me!
@@ -95,7 +97,7 @@ const Leagues = observer(() => {
             <div className="level-item">
               <p className="subtitle is-5">
                 <strong>{leagues.length}</strong> League(s)
-                </p>
+              </p>
             </div>
             <div className="level-item">
               <div className="field has-addons">
@@ -118,9 +120,11 @@ const Leagues = observer(() => {
                 classes="is-success"
                 text="Create League"
                 disabled={hasMaxLeaguesCreated()}
-                title={hasMaxLeaguesCreated()
-                  ? 'Max Leagues Per User: 5'
-                  : 'Create A League'}
+                title={
+                  hasMaxLeaguesCreated()
+                    ? 'Max Leagues Per User: 5'
+                    : 'Create A League'
+                }
                 click={() => {
                   showLeagueModiferModal(true)
                 }}
@@ -131,12 +135,9 @@ const Leagues = observer(() => {
         {leagues.map((league: any, index: number) => (
           <League key={index} league={league}>
             <div className="vsf-league__actions">
-              <Link
-                className="button is-success"
-                to={`/leagues/${league.id}`}
-              >
+              <Link className="button is-success" to={`/leagues/${league.id}`}>
                 League Lobby
-                </Link>
+              </Link>
               <Button
                 text="Join League"
                 click={() => displayJoinLeagueModal(league.id)}
@@ -156,11 +157,17 @@ const Leagues = observer(() => {
                 <i className="material-icons">perm_data_setting</i>
               </span>{' '}
               Settings
-              </div>
+            </div>
           </League>
         ))}
       </section>
-      {isLeagueModiferModalActive ? <LeagueModiferModal /> : ''}
+      {isLeagueModiferModalActive ? (
+        <LeagueModiferModal
+          close={() => {
+            showLeagueModiferModal(!isLeagueModiferModalActive)
+          }}
+        />
+      ) : null}
       {isJoinLeagueModalActive ? (
         <Modal isAcitve>
           <div className="modal-card">
@@ -170,7 +177,7 @@ const Leagues = observer(() => {
             </header>
             <section className="modal-card-body">
               <FieldSet text="Team Name">
-                <Input value={'newTeam.name'} placeholder="Team Name Here" />
+                <Input value={newTeam.name} placeholder="Team Name Here" />
               </FieldSet>
             </section>
             <footer className="modal-card-foot">
@@ -182,14 +189,21 @@ const Leagues = observer(() => {
                 }}
               >
                 Close
-                </a>
-              <Button text="Save" alt click={() => {
-                if (!newTeam.name) {
-                  console.log('Must enter team name')
-                  return false;
-                }
-                executeJoinLeagueMutation({ id: leagueToJoinId, LeagueID: newTeam, OwnerID: user.id })
-              }}
+              </a>
+              <Button
+                text="Save"
+                alt
+                click={() => {
+                  if (!newTeam.name) {
+                    console.log('Must enter team name')
+                    return false
+                  }
+                  executeJoinLeagueMutation({
+                    id: leagueToJoinId,
+                    LeagueID: newTeam,
+                    OwnerID: user.id,
+                  })
+                }}
               />
             </footer>
           </div>
@@ -199,4 +213,4 @@ const Leagues = observer(() => {
   )
 })
 
-export default Leagues;
+export default Leagues

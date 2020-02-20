@@ -1,6 +1,8 @@
 import * as React from 'react'
 import cx from 'classnames'
 import { observer } from 'mobx-react'
+import { FormikFormProps } from 'formik'
+import flatpickr from 'flatpickr'
 
 interface IInputProps {
   id?: string
@@ -13,13 +15,16 @@ interface IInputProps {
   isVertical?: boolean
   isStretched?: boolean
   isBorderless?: boolean
+  isFocusOnMount?: boolean
   name?: string
   placeholder?: string
   type?: string
   value?: string
   data?: any
   invalidMsg?: string
-  isFocusOnMount?: boolean
+  tag?: string
+  field?: any,
+  form?: FormikFormProps,
   onBlur?: (event: React.FocusEvent<HTMLInputElement>, data: any) => void
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
   onChange?: (event: React.KeyboardEvent<HTMLInputElement>, data: any) => void
@@ -32,21 +37,14 @@ class Input extends React.Component<IInputProps, { isFocused: boolean }> {
     type: 'text',
     isInvalid: false,
     value: '',
+    tag: 'input',
     checked: false,
     isFocusOnMount: false,
   }
   inputRef: any
 
-  constructor(props: IInputProps) {
-    super(props)
-    this.state = {
-      isFocused: false,
-    }
-
-    this.setInputRef = this.setInputRef.bind(this)
-    this.onBlur = this.onBlur.bind(this)
-    this.onFocus = this.onFocus.bind(this)
-    this.onChange = this.onChange.bind(this)
+  state = {
+    isFocused: false,
   }
 
   componentDidMount() {
@@ -55,34 +53,53 @@ class Input extends React.Component<IInputProps, { isFocused: boolean }> {
     }
   }
 
-  onBlur(e: React.FocusEvent<HTMLInputElement>) {
+  onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     this.setState({ isFocused: false })
-    if (this.props.onBlur) {
-      this.props.onBlur(e, this.props.data)
+    const {data, field, onBlur} = this.props;
+
+    if (field && field.onBlur) {
+      field.onBlur(e)
+    } else if (onBlur) {
+      onBlur(e, data)
     }
   }
 
-  onFocus(e: React.FocusEvent<HTMLInputElement>) {
+  onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     this.setState({ isFocused: true })
-    if (this.props.onFocus) {
-      this.props.onFocus(e)
+    const {field, onFocus} = this.props;
+
+    if (field && field.onFocus) {
+      field.onFocus(e)
+    } else if (onFocus) {
+     onFocus(e)
     }
   }
 
-  onChange(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (this.props.onChange) {
-      this.props.onChange(e, this.props.data)
+  onChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const {data, field, onChange} = this.props;
+
+    if (field && field.onChange) {
+      field.onChange(e)
+    } else if (onChange) {
+     onChange(e, data)
     }
   }
 
-  setInputRef(input: HTMLInputElement) {
+  setInputRef = (input: HTMLInputElement) => {
+    const field = this.props.field;
     this.inputRef = input
+
+    if (field && field.type === "date") {
+      flatpickr( this.inputRef.current, {
+        dateFormat: 'M d, Y H:i',
+        enableTime: true,
+      })
+    }
   }
 
   render() {
     const {
       id,
-      attributes,
       checked,
       className,
       disabled,
@@ -95,6 +112,7 @@ class Input extends React.Component<IInputProps, { isFocused: boolean }> {
       placeholder,
       type,
       value,
+      field
     } = this.props
 
     const { isFocused } = this.state
@@ -103,7 +121,8 @@ class Input extends React.Component<IInputProps, { isFocused: boolean }> {
       <>
         {icon}
         <input
-          {...attributes}
+          id={id}
+          name={field ? field.name : name}
           className={cx('vsf-input input', className, {
             'is-focused': isFocused,
             'is-invalid': isInvalid,
@@ -111,17 +130,15 @@ class Input extends React.Component<IInputProps, { isFocused: boolean }> {
             'is-stretched': isStretched,
             'is-borderless': isBorderless,
           })}
-          ref={this.setInputRef}
-          checked={checked}
-          onChange={this.onChange}
+          checked={field ? field.checked : checked}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
+          onChange={this.onChange as any}
           placeholder={placeholder}
           disabled={disabled}
-          value={value}
+          value={field ? field.value : value}
+          ref={this.setInputRef}
           type={type}
-          name={name}
-          id={id || name}
         />
       </>
     )
