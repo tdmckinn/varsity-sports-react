@@ -5,7 +5,6 @@ import './styles/Footer.scss'
 const Footer = (props: { children?: any }) => (
   <footer className="vsf-footer footer">
     <div className="container">
-      {/* <div className="vsf-experimental">{React.Children}</div> */}
       <div className="content has-text-centered">
         <p>
           <strong>Varsity Sports Fantasy</strong> by

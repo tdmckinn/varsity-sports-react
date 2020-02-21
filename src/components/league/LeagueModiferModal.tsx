@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { Formik, Form, Field } from 'formik'
-import { useMutation, useQuery } from 'urql';
+import { Formik, Field } from 'formik'
+import { useMutation } from 'urql'
 import { observer } from 'mobx-react'
 
 import './styles/LeagueModiferModal.scss'
 
-import { Button, Modal, FieldSet, Input, LeagueSettings } from '..'
+import { Button, Modal, FieldSet, Input, DatePicker, LeagueSettings } from '..'
 import { useStores } from '../../hooks/use-stores'
 
 const createLeagueMutationQuery = `
@@ -26,11 +26,15 @@ const updateLeagueSettingsMutationQuery = `
   }
 `
 
-const LeagueModifierModal = observer(({close}: any) => {
-  const { authStore: { user } } = useStores();
+const LeagueModifierModal = observer(({ close }: any) => {
+  const {
+    authStore: { user },
+  } = useStores()
 
-  const [_result, createLeagueMutation] = useMutation(createLeagueMutationQuery);
-  const [__result, updateLeagueSettingsMutation] = useMutation(updateLeagueSettingsMutationQuery);
+  const [_result, createLeagueMutation] = useMutation(createLeagueMutationQuery)
+  const [__result, updateLeagueSettingsMutation] = useMutation(
+    updateLeagueSettingsMutationQuery
+  )
 
   const [league, setLeague] = React.useState({
     leagueId: null,
@@ -39,12 +43,12 @@ const LeagueModifierModal = observer(({close}: any) => {
     settings: [],
     leagueName: {
       value: '',
-      isFocusOnMount: true
+      isFocusOnMount: true,
     },
     draftDateTime: '',
     teamName: '',
     commissionerName: user.fullName,
-    isValidForm: true
+    isValidForm: true,
   })
 
   const userCreateLeague = (leagueFormValues: any) => {
@@ -61,19 +65,18 @@ const LeagueModifierModal = observer(({close}: any) => {
     }
 
     createLeagueMutation({
-      league: newLeague
-    })
-      .then(({ data: { createLeague } }: any) => {
-        console.log(createLeague)
-        alert('League saved continue editing...')
+      league: newLeague,
+    }).then(({ data: { createLeague } }: any) => {
+      console.log(createLeague)
+      alert('League saved continue editing...')
 
-        console.log(createLeague, leagueFormValues)
-        setLeague({
-          ...leagueFormValues,
-          leagueId: createLeague.id,
-          isSettingsEditMode: true
-        })
+      console.log(createLeague, leagueFormValues)
+      setLeague({
+        ...leagueFormValues,
+        leagueId: createLeague.id,
+        isSettingsEditMode: true,
       })
+    })
   }
 
   const saveLeagueSettings = () => {
@@ -95,42 +98,43 @@ const LeagueModifierModal = observer(({close}: any) => {
     }
 
     updateLeagueSettingsMutation({
-      settings: updatedSettings
+      settings: updatedSettings,
+    }).then(({ data: { settings } }: any) => {
+      alert('Updating League Settings Successful')
+      close()
     })
-      .then(({ data: { settings } }: any) => {
-        alert('Updating League Settings Successful')
-        close()
-      })
   }
 
   return (
     <Modal isAcitve>
       <div className="league-modifer-modal modal-card">
         <header className="modal-card-head">
-          <p className="modal-card-title">{league.isSettingsEditMode
-            ? `Edit League Settings - ${league.teamName}`
-            : 'Create New League'}</p>
+          <p className="modal-card-title">
+            {league.isSettingsEditMode
+              ? `Edit League Settings - ${league.teamName}`
+              : 'Create New League'}
+          </p>
           <button className="delete" onClick={close} />
         </header>
         <section className="modal-card-body">
           <p className="league-modifer-modal__note">
             * Note once you create a new league you will automatically have an
             associated team created. Team details can be changed later.
-            </p>
+          </p>
           <Formik
             initialValues={{
               leagueId: null,
               isSettingsEditMode: false,
               leagueSettings: {},
-              leagueName: "",
+              leagueName: '',
               draftDateTime: '',
               teamName: '',
               commissionerName: user.fullName,
-              isValidForm: true
+              isValidForm: true,
             }}
-            onSubmit={async values => {
-              await new Promise(resolve => setTimeout(resolve, 500));
-              console.log("VAUES >>>", values)
+            onSubmit={async (values) => {
+              await new Promise((resolve) => setTimeout(resolve, 500))
+              console.log('VAUES >>>', values)
               userCreateLeague(values)
             }}
           >
@@ -146,18 +150,13 @@ const LeagueModifierModal = observer(({close}: any) => {
                       />
                     </FieldSet>
                     <FieldSet text="Commissioner Name">
-                      <Field
-                        name="commissionerName"
-                        component={Input}
-                      />
+                      <Field name="commissionerName" component={Input} />
                     </FieldSet>
                     <FieldSet text="Draft Date / Time">
-                      <Field
+                      <DatePicker
                         id="leagueModiferDraftDateTimer"
                         name="draftDateTime"
                         placeholder="Date Here"
-                        type="date"
-                        component={Input}
                       />
                     </FieldSet>
                     <div className="vsf__divider" />
@@ -179,12 +178,12 @@ const LeagueModifierModal = observer(({close}: any) => {
           </Formik>
         </section>
         <footer className="modal-card-foot">
-          <a className="button" onClick={close  }>
+          <a className="button" onClick={close}>
             Cancel
-            </a>
+          </a>
           <Button
             type="submit"
-            text={league.isSettingsEditMode ? "Save Settings" : "Submit"}
+            text={league.isSettingsEditMode ? 'Save Settings' : 'Submit'}
             alt
           />
         </footer>

@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { Link, useHistory } from "react-router-dom";
-
 import { getYear } from 'date-fns'
 import { observer } from 'mobx-react'
 
 import Sidebar from './Sidebar'
 
-import './styles/Header.scss'
 import helmentIcon from '../../assets/svgs/defaultHelment.svg'
 import { useStores } from '../../hooks/use-stores'
+
+import './styles/Header.scss'
 
 const Header = () => {
   const { authStore: {user, logout} } = useStores();
