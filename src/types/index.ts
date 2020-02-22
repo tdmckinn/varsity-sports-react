@@ -36,3 +36,17 @@ export interface Team {
   id: number
   abbreviation: string
 }
+
+export interface ILeague {
+  id: number
+  DraftID: number
+  DraftDateTime: string
+  CommissionerName: string
+  CommissionerID: string
+  LeagueName: string
+  LeagueTeams: any
+  LeagueSettings: any
+  Users: any
+  DateCreated: string
+  IsDraftComplete: boolean
+}

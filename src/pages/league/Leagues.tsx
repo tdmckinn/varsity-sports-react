@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { useMutation, useQuery } from 'urql'
 
+import { ILeague } from '../../types'
+
 import './Leagues.scss'
 
 import {
@@ -14,7 +16,6 @@ import {
   FieldSet,
   LeagueModiferModal,
 } from '../../components'
-import { League as ILeague } from '../../components/league/League'
 import { getLeagues } from '../../queries/league'
 
 import { useStores } from '../../hooks/use-stores'
@@ -47,7 +48,6 @@ const Leagues = observer(() => {
   const [leagueToJoinId, setLeagueToJoinId] = React.useState('')
   const [newTeam, setNewTeam] = React.useState({ name: '' })
 
-  console.log(joinLeagueResponse)
   if (fetching) {
     return <div>"Loading..."</div>
   } else if (error) {
@@ -60,7 +60,7 @@ const Leagues = observer(() => {
   const hasMaxLeaguesCreated = () => {
     return (
       leagues &&
-      leagues.filter((league: any) => league.CommissionerID === user.id)
+      leagues.filter((league: ILeague) => league.CommissionerID === user.id)
         .length === 5
     )
   }
@@ -70,11 +70,11 @@ const Leagues = observer(() => {
     setLeagueToJoinId(id)
   }
 
-  const isUserJoinedLeague = (league: any) => {
+  const isUserJoinedLeague = (league: ILeague) => {
     return (
       league.CommissionerID === user.id ||
       league.LeagueTeams.some(
-        (team: { OwnerID: any }) => team.OwnerID === user.id
+        (team: { OwnerID: string }) => team.OwnerID === user.id
       )
     )
   }

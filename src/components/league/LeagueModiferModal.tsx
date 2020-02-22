@@ -58,10 +58,10 @@ const LeagueModifierModal = observer(({ close }: any) => {
      */
     const newLeague = {
       CommissionerID: user.id,
-      LeagueName: leagueFormValues.name,
+      LeagueName: leagueFormValues.leagueName,
       CommissionerName: leagueFormValues.commissionerName,
-      // DraftDateTime: FormData(new Date(this.draftDateTime), 'YYYY-MM-dd HH:mm'),
-      // TeamName: leagueFormValues.teamName,
+      DraftDateTime: leagueFormValues.draftDateTime[0],
+      TeamName: leagueFormValues.teamName,
     }
 
     createLeagueMutation({
@@ -132,8 +132,10 @@ const LeagueModifierModal = observer(({ close }: any) => {
               commissionerName: user.fullName,
               isValidForm: true,
             }}
-            onSubmit={async (values) => {
-              await new Promise((resolve) => setTimeout(resolve, 500))
+            onSubmit={async ({ isValidForm, ...values }) => {
+              if (!isValidForm) {
+                alert('Form invalid please fix errors to continue.')
+              }
               console.log('VAUES >>>', values)
               userCreateLeague(values)
             }}
@@ -157,6 +159,11 @@ const LeagueModifierModal = observer(({ close }: any) => {
                         id="leagueModiferDraftDateTimer"
                         name="draftDateTime"
                         placeholder="Date Here"
+                        options={{
+                          enableTime: true,
+                          minTime: '16:00',
+                          maxTime: '22:00',
+                        }}
                       />
                     </FieldSet>
                     <div className="vsf__divider" />
@@ -173,20 +180,22 @@ const LeagueModifierModal = observer(({ close }: any) => {
                     <div className="vsf__divider" />
                   </div>
                 ) : null}
+                <footer className="modal-card-foot">
+                  <a className="button" onClick={close}>
+                    Cancel
+                  </a>
+                  <Button
+                    type="submit"
+                    text={
+                      league.isSettingsEditMode ? 'Save Settings' : 'Submit'
+                    }
+                    alt
+                  />
+                </footer>
               </form>
             )}
           </Formik>
         </section>
-        <footer className="modal-card-foot">
-          <a className="button" onClick={close}>
-            Cancel
-          </a>
-          <Button
-            type="submit"
-            text={league.isSettingsEditMode ? 'Save Settings' : 'Submit'}
-            alt
-          />
-        </footer>
       </div>
     </Modal>
   )

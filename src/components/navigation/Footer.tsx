@@ -2,9 +2,10 @@ import * as React from 'react'
 
 import './styles/Footer.scss'
 
-const Footer = (props: { children?: any }) => (
+const Footer = ({ children}) => (
   <footer className="vsf-footer footer">
     <div className="container">
+      {children}
       <div className="content has-text-centered">
         <p>
           <strong>Varsity Sports Fantasy</strong> by

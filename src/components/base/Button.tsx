@@ -14,24 +14,45 @@ interface ButtonProps {
   type?: string
 }
 
-const Button = ({ alt, children, classes, click, text, type = "button", disabled, ...props }: ButtonProps) => (
-  <button
-    type={type}
-    className={cx('vsf-button button', {
-      'is-primary': !alt,
-      'is-alt': alt,
-    }, classes)}
-    disabled={disabled}
-    onClick={() => {
-      if (click) {
-        click()
-      }
-    }}
-    {...props}
-  >
-    {text}
-    {children ? <div className="vsf-button__slot">{children}</div> : ''}
-  </button>
-)
+const Button = ({
+  alt,
+  children,
+  classes,
+  click,
+  text,
+  type = 'button',
+  disabled,
+  ...props
+}: ButtonProps) => {
+  let btnProps = {}
+  if (type !== 'submit') {
+    btnProps = {
+      onClick: () => {
+        if (click) {
+          click()
+        }
+      },
+    }
+  }
+  return (
+    <button
+      type={type}
+      className={cx(
+        'vsf-button button',
+        {
+          'is-primary': !alt,
+          'is-alt': alt,
+        },
+        classes
+      )}
+      disabled={disabled}
+      {...props}
+      {...btnProps}
+    >
+      {text}
+      {children ? <div className="vsf-button__slot">{children}</div> : ''}
+    </button>
+  )
+}
 
 export default Button
