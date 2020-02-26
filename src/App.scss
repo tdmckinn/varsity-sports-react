@@ -14,6 +14,7 @@
       padding-left: 10px;
       padding-right: 10px;
       flex: 1;
+
       &--login {
         background-image: url('./assets/images/sandro-schuh-143183.jpg');
         background-position: center;
@@ -22,11 +23,12 @@
       }
     }
 
+    a.navbar-item:focus,
     a.navbar-item:hover,
     a.navbar-item.is-active,
     .navbar-link:hover,
     .navbar-link.is-active {
-      background-color: #fafafa;
+      background-color: #1c2227;
       color: $orange;
     }
   }

@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom'
 import { observer } from 'mobx-react'
 
-import { Header, Footer, LoadingSpinner, ThemeMusic, Login } from './components'
+import { Header, Footer, LoadingSpinner, Login } from './components'
 import PrivateRoute from './router/PrivateRoute'
 import { useStores } from './hooks/use-stores'
 
@@ -86,9 +86,7 @@ const App = observer(({ isUserDraftLoading }: AppProps) => {
               <Login />
             </main>
           )}
-        <Footer>
-          <ThemeMusic />
-        </Footer>
+        <Footer />
         {isUserDraftLoading ? (
           <div className="vsf-loading--fullscreen">
             <h2 className="vsf-loading__header">vsf FANTASY</h2>

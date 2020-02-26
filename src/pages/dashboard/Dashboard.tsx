@@ -46,6 +46,10 @@ const Dashboard = () => {
     `
   });
 
+  if (fetching) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="vsf-dashboard notification">
       <h1 className="vsf-dashboard__header title">

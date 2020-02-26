@@ -1,6 +1,5 @@
 import * as React from 'react'
 import cx from 'classnames'
-import { observer } from 'mobx-react'
 import { FormikFormProps } from 'formik'
 
 interface InputProps {
@@ -33,7 +32,6 @@ interface InputState {
   isFocused: boolean
 }
 
-@observer
 class Input extends React.Component<InputProps, InputState> {
   static defaultProps = {
     attributes: {},
@@ -125,7 +123,7 @@ class Input extends React.Component<InputProps, InputState> {
     return (
       <>
         {icon}
-        {(
+        {
           <input
             className={cx('vsf-input input', className, {
               'is-focused': isFocused,
@@ -140,7 +138,7 @@ class Input extends React.Component<InputProps, InputState> {
             type={type}
             {...inputProps}
           />
-        )}
+        }
       </>
     )
   }

@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import './styles/Footer.scss'
 
-const Footer = ({ children}) => (
+const Footer = ({ children }: { children?: any }) => (
   <footer className="vsf-footer footer">
     <div className="container">
       {children}
