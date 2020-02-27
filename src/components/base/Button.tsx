@@ -41,7 +41,7 @@ const Button = ({
         'vsf-button button',
         {
           'is-primary': !alt,
-          'is-alt': alt,
+          'is-alt': alt
         },
         classes
       )}

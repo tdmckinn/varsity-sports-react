@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Field } from 'formik'
-import { useQuery } from 'urql';
+import { useQuery } from 'urql'
 
 import './styles/LeagueSettings.scss'
 
-import { Input, FieldSet, Select } from '..'
-import { getSettings } from '../../queries/settings';
+import { Input, FieldSet, Select, RadioControl } from '..'
+import { getSettings } from '../../queries/settings'
 
 interface SettingsConfig {
   id?: string
@@ -19,20 +19,20 @@ interface SettingsConfig {
 
 const LeagueSettings = ({ leagueSettings }: any) => {
   const [{ fetching, error, data }] = useQuery({
-    query: getSettings
+    query: getSettings,
   })
 
   if (fetching) {
-    return <div>"Loading..."</div>;
+    return <div>Loading...</div>
   } else if (error || !data.settings) {
-    return <div>":( Couldn't load leagues try again"</div>;
+    return <div>":( Couldn't load league settings try again"</div>
   }
 
   return (
     <div className="league-settings">
       <h5 className="league-settings__title title is-5">
         League Configuration / Draft Settings
-    </h5>
+      </h5>
       {data.settings.length !== 0 ? (
         <div>
           {data.settings.map(
@@ -48,7 +48,6 @@ const LeagueSettings = ({ leagueSettings }: any) => {
               }: SettingsConfig,
               index: number
             ) => {
-
               const getSettingElement = () => {
                 switch (type) {
                   case 'dropdown':
@@ -56,7 +55,8 @@ const LeagueSettings = ({ leagueSettings }: any) => {
                       <Select
                         id={id}
                         options={values}
-                        value={leagueSettings}
+                        name={`leagueSettings.${id}`}
+                        label="value"
                         placeholder="Select Item"
                       />
                     )
@@ -66,20 +66,25 @@ const LeagueSettings = ({ leagueSettings }: any) => {
                         type="text"
                         disabled={readOnly}
                         placeholder={value}
-                        value="leagueSettings[config.id]"
+                        name={`leagueSettings.${id}`}
                         component={Input}
                       />
                     )
-                  // case 'radio':
-                  //   // configElement = <RadioControl id={id} options={values} v-model="leagueSettings[config.id]" />
-                  //   break;
+                  case 'radio':
+                    return (
+                      <RadioControl
+                        options={values}
+                        name={`leagueSettings.${id}`}
+                      />
+                    )
+                    break
                   case 'other':
                     return (
                       <Field
                         type="text"
                         disabled={readOnly}
                         placeholder={singleValues.join(',')}
-                        v-model="leagueSettings[config.id]"
+                        name={`leagueSettings.${id}`}
                         component={Input}
                       />
                     )
@@ -99,8 +104,8 @@ const LeagueSettings = ({ leagueSettings }: any) => {
           )}
         </div>
       ) : (
-          ''
-        )}
+        ''
+      )}
     </div>
   )
 }

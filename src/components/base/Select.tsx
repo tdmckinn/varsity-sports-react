@@ -1,45 +1,28 @@
 import * as React from 'react'
 import ReactSelect from 'react-select'
-import { Props } from 'react-select/lib/Select'
+import { useField } from 'formik'
 
-interface VsfSelectProps extends Props {}
+const Select = ({ label, options = [], ...props }: any) => {
+  const [field, _meta, helpers] = useField(props)
 
-const Select = (props: VsfSelectProps) => (
-  <ReactSelect backspaceRemovesValue={false} {...props} />
-)
+  const selectOptions = label
+    ? options.map(({ value }) => ({
+        label: value,
+        value,
+      }))
+    : options
+  const handleChange = (selectedOption) => {
+    helpers.setValue(selectedOption)
+  }
+  return (
+    <ReactSelect
+      backspaceRemovesValue={false}
+      {...props}
+      {...field}
+      options={selectOptions}
+      onChange={handleChange}
+    />
+  )
+}
 
 export default Select
-
-// {/* <template>
-//   <v-select
-//     label="value"
-//     :inputId="id"
-//     :placeholder="placeholder"
-//     :options="items"
-//     :onChange="onChange"
-//   >
-//   </v-select>
-// </template> */}
-
-// {/* <script lang="ts">
-// import Vue from 'vue'
-
-// export default Vue.extend({
-//   props: {
-//     id: String,
-//     items: Array,
-//     placeholder: String,
-//   },
-//   data() {
-//     return {
-//       isActive: false
-//     }
-//   },
-//   methods: {
-//     onChange(item) {
-//       this.$emit('input', item.value || item)
-//     }
-//   }
-// })
-// </script>
-//  */}

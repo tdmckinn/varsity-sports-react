@@ -10,20 +10,19 @@ import { useStores } from '../../hooks/use-stores'
 
 import './styles/Header.scss'
 
+const navBarItems = [
+  { name: 'My Teams', route: '/teams' },
+  { name: 'Leagues', route: '/leagues' },
+  { name: 'Players', route: '/players' },
+  { name: 'Draft', route: '/draft' },
+  {
+    name: 'Logout', isOnlyMobile: true, isDefault: true, route: '/logout',
+  }
+]
+
 const Header = () => {
   const { authStore: {user, logout} } = useStores();
   const history = useHistory();
-
-  const navBarItems = [
-    { name: 'My Teams', route: '/teams' },
-    { name: 'Leagues', route: '/leagues' },
-    { name: 'Players', route: '/players' },
-    { name: 'Highlights', route: '/highlights' },
-    { name: 'Draft', route: '/draft' },
-    {
-      name: 'Logout', isOnlyMobile: true, isDefault: true, route: '/logout',
-    }
-  ]
 
   const handleLogoutClick = () => {
     logout();

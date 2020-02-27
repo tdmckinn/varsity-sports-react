@@ -1,6 +1,7 @@
 @import '../../../assets/styles/vars.scss';
 
 .vsf-league {
+  position: relative;
   margin-top: 50px;
 
   &__item {
@@ -16,12 +17,6 @@
       border-color: $orange;
       cursor: pointer;
     }
-  }
-
-  &__content {
-    // display: flex;
-    // justify-content: space-between;
-    // flex-wrap: wrap;
   }
 
   &__name {

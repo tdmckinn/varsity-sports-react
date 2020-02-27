@@ -8,6 +8,7 @@ import './styles/LeagueModiferModal.scss'
 
 import { Button, Modal, FieldSet, Input, DatePicker, LeagueSettings } from '..'
 import { useStores } from '../../hooks/use-stores'
+import { ILeague } from '../../types'
 
 const createLeagueMutationQuery = `
   mutation($league: CreateLeagueInput!) {
@@ -30,10 +31,11 @@ const updateLeagueSettingsMutationQuery = `
 interface LeagueModifierModalProps {
   close: () => void
   type: string
+  selectedLeague?: ILeague
 }
 
 const LeagueModifierModal = observer(
-  ({ close, type }: LeagueModifierModalProps) => {
+  ({ close, selectedLeague, type }: LeagueModifierModalProps) => {
     const {
       authStore: { user },
     } = useStores()
@@ -46,18 +48,13 @@ const LeagueModifierModal = observer(
     )
 
     const [league, setLeague] = React.useState({
-      leagueId: null,
-      isSettingsEditMode: false,
-      leagueSettings: {},
-      settings: [],
-      leagueName: {
-        value: '',
-        isFocusOnMount: true,
-      },
-      draftDateTime: '',
-      teamName: '',
+      id: selectedLeague?.id,
+      isSettingsEditMode: type === 'editLeague',
+      leagueSettings: selectedLeague?.LeagueSettings ?? {},
+      leagueName: selectedLeague?.LeagueName ?? "",
+      draftDateTime: selectedLeague?.DraftDateTime ?? "",
+      teamName: "",
       commissionerName: user.fullName,
-      isValidForm: true,
     })
 
     const userCreateLeague = (leagueFormValues: any) => {
@@ -73,59 +70,49 @@ const LeagueModifierModal = observer(
         TeamName: leagueFormValues.teamName,
       }
 
-      createLeagueMutation({
-        league: newLeague,
-      }).then(({ data: { createLeague } }: any) => {
-        console.log(createLeague)
-        alert('League saved continue editing...')
+      // createLeagueMutation({
+      //   league: newLeague,
+      // }).then(({ data: { createLeague } }: any) => {
+      //   console.log(createLeague)
+      //   alert('League saved continue editing...')
 
-        console.log(createLeague, leagueFormValues)
-        setLeague({
-          ...leagueFormValues,
-          leagueId: createLeague.id,
-          isSettingsEditMode: true,
-        })
-      })
+      //   console.log(createLeague, leagueFormValues)
+      //   setLeague({
+      //     ...leagueFormValues,
+      //     leagueId: createLeague.id,
+      //     isSettingsEditMode: true,
+      //   })
+      // })
     }
 
-    const saveLeagueSettings = () => {
-      const readonlySettings: any = league.settings
-        .filter(({ readOnly }: any) => readOnly)
-        .map(({ id, value, values, singleValues }: any) => {
-          return { [id]: value || values || singleValues }
-        })
-        .reduce((val: any, nextSetting: any) => {
-          const setting = Object.entries(nextSetting)[0]
-          val[setting[0] as any] = setting[1]
-          return val
-        }, {})
-
-      const updatedSettings = {
-        LeagueID: league.leagueId,
-        ...league.leagueSettings,
-        ...readonlySettings,
+    const saveLeagueSettings = (leagueFormValues: any) => {
+      const updatedLeagueSettings = {
+        ...leagueFormValues.leagueSettings,
+        MaxTeams: leagueFormValues.MaxTeams?.value ?? 10,
+        LeagueID: leagueFormValues.id,
       }
 
-      updateLeagueSettingsMutation({
-        settings: updatedSettings,
-      }).then(({ data: { settings } }: any) => {
-        alert('Updating League Settings Successful')
-        close()
-      })
+      console.log(updatedLeagueSettings)
+      // updateLeagueSettingsMutation({
+      //   settings: updatedSettings,
+      // }).then(({ data: { settings } }: any) => {
+      //   alert('Updating League Settings Successful')
+      //   close()
+      // })
     }
 
     return (
       <Modal isAcitve>
         <div
           className={cx('league-modifer-modal modal-card', {
-            'is-create': type === 'createLeague',
-            'is-edit': type === 'editLeague',
+            'is-create': !league.isSettingsEditMode,
+            'is-edit': league.isSettingsEditMode,
           })}
         >
           <header className="modal-card-head">
             <p className="modal-card-title">
               {league.isSettingsEditMode
-                ? `Edit League Settings - ${league.teamName}`
+                ? `Edit League Settings - ${league.leagueName}`
                 : 'Create New League'}
             </p>
             <button className="delete" onClick={close} />
@@ -137,21 +124,22 @@ const LeagueModifierModal = observer(
             </p>
             <Formik
               initialValues={{
-                leagueId: null,
-                isSettingsEditMode: false,
-                leagueSettings: {},
-                leagueName: '',
-                draftDateTime: '',
-                teamName: '',
-                commissionerName: user.fullName,
-                isValidForm: true,
+               ...league
               }}
-              onSubmit={async ({ isValidForm, ...values }) => {
-                if (!isValidForm) {
-                  alert('Form invalid please fix errors to continue.')
-                }
+              onSubmit={async ({teamName, ...values }) => {
+                // if (!isValidForm) {
+                //   alert('Form invalid please fix errors to continue.')
+                // }
                 console.log('VAUES >>>', values)
-                userCreateLeague(values)
+
+                if (league.isSettingsEditMode) {
+                  saveLeagueSettings(values)
+                } else {
+                  userCreateLeague({
+                    teamName,
+                    ...values
+                  })
+                }
               }}
             >
               {({ ...props }: any) => (
@@ -193,7 +181,11 @@ const LeagueModifierModal = observer(
                       </FieldSet>
                       <div className="vsf__divider" />
                     </div>
-                  ) : null}
+                  ) : (
+                    <LeagueSettings
+                      leagueSettings={props.values.leagueSettings}
+                    />
+                  )}
                   <footer className="modal-card-foot">
                     <a className="button" onClick={close}>
                       Cancel

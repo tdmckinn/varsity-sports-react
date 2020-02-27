@@ -58,6 +58,9 @@ const League = ({ league, children }: LeagueProps) => {
     setJoinLeagueDisplay(true)
     setLeagueToJoinId(id)
   }
+  const editLeague = () => {
+    showLeagueModiferModal(true)
+  }
 
   const isLeagueCommissioner = league.CommissionerID === user.id
   const hasUserJoinedLeague =
@@ -65,14 +68,10 @@ const League = ({ league, children }: LeagueProps) => {
     league.LeagueTeams.some(
       (team: { OwnerID: string }) => team.OwnerID === user.id
     )
-
-  const editLeague = () => {
-    showLeagueModiferModal(true)
-  }
-
   const draftDateTime = new Date(Number(league.DraftDateTime))
   const isDraftPast = isPast(draftDateTime)
   const draftTimeLabelText = isDraftPast ? 'Draft Ended' : 'Draft Start'
+
   return (
     <>
       <div className="vsf-league">
@@ -100,7 +99,7 @@ const League = ({ league, children }: LeagueProps) => {
               alt
             />
             {isLeagueCommissioner ? (
-              <Button text="Edit League" click={() => editLeague()} alt />
+              <Button text="Edit League" click={() => editLeague()} classes="has-background-info" />
             ) : null}
           </div>
           <div className="vsf-league__settings">
@@ -115,6 +114,7 @@ const League = ({ league, children }: LeagueProps) => {
       {isLeagueModiferModalActive ? (
         <LeagueModiferModal
           type="editLeague"
+          selectedLeague={league}
           close={() => {
             showLeagueModiferModal(!isLeagueModiferModalActive)
           }}

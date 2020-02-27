@@ -3,6 +3,7 @@ export { default as DatePicker } from './base/DatePicker'
 export { default as Input } from './base/Input'
 export { default as SectionHeader } from './base/SectionHeader'
 export { default as Select } from './base/Select'
+export { default as RadioControl } from './base/RadioControl'
 
 export { default as Footer } from './navigation/Footer'
 export { default as Header } from './navigation/Header'
