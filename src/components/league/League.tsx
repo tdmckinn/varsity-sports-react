@@ -8,8 +8,7 @@ import {
   Modal,
   Input,
   FieldSet,
-  LeagueModiferModal,
-  LeagueSettings,
+  LeagueModiferModal
 } from '../../components'
 import { DRAFT_DATE_TIME_FORMAT } from '../../const'
 import { useStores } from '../../hooks/use-stores'
@@ -161,7 +160,16 @@ const League = ({ league, children }: LeagueProps) => {
             </header>
             <section className="modal-card-body">
               <FieldSet text="Team Name">
-                <Input value={newTeam.name} placeholder="Team Name Here" />
+                <Input
+                  value={newTeam.name}
+                  placeholder="Team Name Here"
+                  onChange={(event) => {
+                    setNewTeam({
+                      ...newTeam,
+                      name: event.target.value,
+                    })
+                  }}
+                />
               </FieldSet>
             </section>
             <footer className="modal-card-foot">
@@ -169,6 +177,7 @@ const League = ({ league, children }: LeagueProps) => {
                 className="button"
                 onClick={(e: any) => {
                   e.preventDefault()
+                  setJoinLeagueDisplay(false)
                   showLeagueModiferModal(false)
                 }}
               >

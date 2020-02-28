@@ -3,10 +3,11 @@ import { observer } from 'mobx-react'
 import { useQuery } from 'urql'
 
 import {
+  Button,
   League,
   LeagueModiferModal,
   SectionHeader,
-  Button,
+  Input,
 } from '../../components'
 import { getLeagues } from '../../queries/league'
 import { useStores } from '../../hooks/use-stores'
@@ -14,18 +15,21 @@ import { ILeague } from '../../types'
 
 import './Leagues.scss'
 
+const MAX_LEAGUES_PER_COMMISH = 5
+
 const Leagues = observer(() => {
   const {
     authStore: { user },
   } = useStores()
 
-  const [{ fetching, error, data }] = useQuery({
-    query: getLeagues,
-  })
-
+  const [leagueNameQuery, setLeagueNameQuery] = React.useState('')
   const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(
     false
   )
+
+  const [{ fetching, error, data }] = useQuery({
+    query: getLeagues,
+  })
 
   if (fetching) {
     return <div>Loading...</div>
@@ -36,7 +40,23 @@ const Leagues = observer(() => {
   const { leagues }: { leagues: ILeague[] } = data
   const hasMaxLeaguesCreated =
     leagues &&
-    leagues.filter((league) => league.CommissionerID === user.id).length === 5
+    leagues.filter((league) => league.CommissionerID === user.id).length ===
+      MAX_LEAGUES_PER_COMMISH
+
+  const filterMatch = `^${leagueNameQuery}`
+  let displayLeagues = leagues.filter(({ LeagueName }) => {
+    if (leagueNameQuery === '') return true
+
+    if (LeagueName.match(new RegExp(filterMatch))?.length > 0) {
+      return true;
+    }
+
+    return false
+  }) as any
+
+  displayLeagues = displayLeagues.map((league, index: number) => (
+    <League key={index} league={league} />
+  ))
 
   return (
     <div className="vsf-app__leagues">
@@ -51,10 +71,13 @@ const Leagues = observer(() => {
           <div className="level-item">
             <div className="field has-addons">
               <p className="control">
-                <input
-                  className="input"
+                <Input
                   type="text"
+                  value={leagueNameQuery}
                   placeholder="Find a league"
+                  onChange={(event) => {
+                    setLeagueNameQuery(event.target.value)
+                  }}
                 />
               </p>
               <p className="control">
@@ -82,9 +105,7 @@ const Leagues = observer(() => {
         </div>
       </nav>
       <section>
-        {leagues.map((league: any, index: number) => (
-          <League key={index} league={league} />
-        ))}
+        {displayLeagues}
         {isLeagueModiferModalActive ? (
           <LeagueModiferModal
             type="createLeague"

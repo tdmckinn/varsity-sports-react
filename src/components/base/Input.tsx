@@ -25,7 +25,7 @@ interface InputProps {
   form?: FormikFormProps
   onBlur?: (event: React.FocusEvent<HTMLInputElement>, data: any) => void
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
-  onChange?: (event: React.KeyboardEvent<HTMLInputElement>, data: any) => void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>, data: any) => void
 }
 
 interface InputState {
@@ -76,7 +76,7 @@ class Input extends React.Component<InputProps, InputState> {
     }
   }
 
-  onChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { data, field, onChange } = this.props
 
     if (field && field.onChange) {
