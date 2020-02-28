@@ -115,7 +115,7 @@ const Draft = ({
       <div className="nfx-draft__exit">
         <Button
           text="Exit Draft"
-          click={() => {
+          onClick={() => {
             executeExitDraftMutation({ userId: user.id, draftId: 1 })
           }}
         >
@@ -133,7 +133,7 @@ const Draft = ({
           </span>
           <Button
             text="Draft Player"
-            click={draftPlayer}
+            onClick={draftPlayer}
             alt
             disabled={!selectedPick.hasOwnProperty('id')}
           />

@@ -22,6 +22,7 @@
       &:hover {
         background: $primary;
         border-bottom: 1px solid $orange;
+        color: white;
       }
     }
 
@@ -40,6 +41,10 @@
         border-bottom: 1px solid $primary;
       }
     }
+  }
+
+  .navbar-dropdown {
+    left: -62px;
   }
 
   .title {

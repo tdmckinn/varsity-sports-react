@@ -93,12 +93,15 @@ const LeagueModifierModal = observer(
       }
 
       console.log(updatedLeagueSettings)
-      // updateLeagueSettingsMutation({
-      //   settings: updatedSettings,
-      // }).then(({ data: { settings } }: any) => {
-      //   alert('Updating League Settings Successful')
-      //   close()
-      // })
+
+      delete updatedLeagueSettings.__typename
+
+      updateLeagueSettingsMutation({
+        settings: updatedLeagueSettings,
+      }).then(({ data: { settings } }: any) => {
+        alert('Updating League Settings Successful')
+        close()
+      })
     }
 
     return (

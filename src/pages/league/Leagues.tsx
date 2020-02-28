@@ -74,7 +74,7 @@ const Leagues = observer(() => {
                   ? 'Max Leagues Per User: 5'
                   : 'Create A League'
               }
-              click={() => {
+              onClick={() => {
                 showLeagueModiferModal(true)
               }}
             />

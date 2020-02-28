@@ -9,6 +9,7 @@ import {
   Input,
   FieldSet,
   LeagueModiferModal,
+  LeagueSettings,
 } from '../../components'
 import { DRAFT_DATE_TIME_FORMAT } from '../../const'
 import { useStores } from '../../hooks/use-stores'
@@ -50,6 +51,7 @@ const League = ({ league, children }: LeagueProps) => {
   const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(
     false
   )
+  const [isShowLeaguesSettings, showLeagueSettings] = React.useState(false)
   const [isJoinLeagueModalActive, setJoinLeagueDisplay] = React.useState(false)
   const [leagueToJoinId, setLeagueToJoinId] = React.useState('')
   const [newTeam, setNewTeam] = React.useState({ name: '' })
@@ -94,20 +96,50 @@ const League = ({ league, children }: LeagueProps) => {
             </Link>
             <Button
               text="Join League"
-              click={() => displayJoinLeagueModal(league.id)}
+              onClick={() => displayJoinLeagueModal(league.id)}
               disabled={hasUserJoinedLeague}
               alt
             />
             {isLeagueCommissioner ? (
-              <Button text="Edit League" click={() => editLeague()} classes="has-background-info" />
+              <Button
+                text="Edit League"
+                onClick={() => editLeague()}
+                classes="has-background-info"
+              />
             ) : null}
           </div>
           <div className="vsf-league__settings">
             <div className="vsf__divider" />
-            <span>
-              <i className="material-icons">perm_data_setting</i>
-            </span>{' '}
-            Settings
+            <Button
+              text="Settings"
+              style={{
+                color: '#000',
+                backgroundColor: '#fff',
+              }}
+              borderless={true}
+              onClick={() => {
+                showLeagueSettings(!isShowLeaguesSettings)
+              }}
+              icon={
+                <span>
+                  <i className="material-icons">perm_data_setting</i>{' '}
+                </span>
+              }
+            />
+            {isShowLeaguesSettings ? (
+              <div className="vsf-league__settings-readOnly">
+                {Object.entries(league.LeagueSettings).map((item) => {
+                  const [key, value] = item
+
+                  if (key === '__typename') return null
+                  return (
+                    <div className="readonly-setting">
+                      <b>{key}</b>: {value}
+                    </div>
+                  )
+                })}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -145,7 +177,7 @@ const League = ({ league, children }: LeagueProps) => {
               <Button
                 text="Save"
                 alt
-                click={() => {
+                onClick={() => {
                   if (!newTeam.name) {
                     console.log('Must enter team name')
                     return false
