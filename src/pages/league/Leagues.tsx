@@ -43,18 +43,16 @@ const Leagues = observer(() => {
     leagues.filter((league) => league.CommissionerID === user.id).length ===
       MAX_LEAGUES_PER_COMMISH
 
-  const filterMatch = `^${leagueNameQuery}`
-  let displayLeagues = leagues.filter(({ LeagueName }) => {
+  const filterRegex = new RegExp(`^${leagueNameQuery}`)
+  const displayLeagues = leagues.filter(({ LeagueName }) => {
     if (leagueNameQuery === '') return true
 
-    if (LeagueName.match(new RegExp(filterMatch))?.length > 0) {
+    if (LeagueName.match(filterRegex)?.length > 0) {
       return true;
     }
 
     return false
-  }) as any
-
-  displayLeagues = displayLeagues.map((league, index: number) => (
+  }).map((league, index: number) => (
     <League key={index} league={league} />
   ))
 
@@ -65,7 +63,7 @@ const Leagues = observer(() => {
         <div className="level-left">
           <div className="level-item">
             <p className="subtitle is-5">
-              <strong>{leagues.length}</strong> League(s)
+             <strong>{displayLeagues.length}</strong> of <strong>{leagues.length}</strong> League(s)
             </p>
           </div>
           <div className="level-item">

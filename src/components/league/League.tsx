@@ -1,14 +1,15 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { format, isPast } from 'date-fns'
-import { useMutation } from 'urql'
+import { useMutation, cacheExchange } from 'urql'
+import cx from 'classnames'
 
 import {
   Button,
   Modal,
   Input,
   FieldSet,
-  LeagueModiferModal
+  LeagueModiferModal,
 } from '../../components'
 import { DRAFT_DATE_TIME_FORMAT } from '../../const'
 import { useStores } from '../../hooks/use-stores'
@@ -83,7 +84,11 @@ const League = ({ league, children }: LeagueProps) => {
               {league.LeagueTeams.length} of {league.LeagueSettings.MaxTeams}{' '}
               Members
             </span>
-            <span className="vsf-league__tag tag is-light">
+            <span
+              className={cx('vsf-league__tag tag', {
+                'is-coral': isDraftPast,
+              })}
+            >
               {draftTimeLabelText}: {draftDate(draftDateTime)}
             </span>
           </div>

@@ -23,7 +23,7 @@ const Button = ({
   children,
   classes,
   onClick,
-  disabled,
+  disabled = false,
   icon,
   text,
   type = 'button',

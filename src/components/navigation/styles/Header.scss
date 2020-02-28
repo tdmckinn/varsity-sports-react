@@ -26,10 +26,6 @@
       }
     }
 
-    &-link::after {
-      border-color: white;
-    }
-
     .navbar-item.has-dropdown:hover .navbar-link,
     .navbar-item.has-dropdown.is-active .navbar-link {
       background-color: $primary;
@@ -41,6 +37,16 @@
         border-bottom: 1px solid $primary;
       }
     }
+  }
+
+  .navbar-link::after {
+    border-color: white;
+  }
+
+  .navbar-link:not(.is-arrowless)::after {
+    border-color: white;
+    margin-top: -0.375em;
+    right: 1.125em;
   }
 
   .navbar-dropdown {

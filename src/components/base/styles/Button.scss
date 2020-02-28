@@ -1,6 +1,8 @@
 @import '../../../assets/styles/vars.scss';
 
 .vsf-button {
+  color: white;
+
   .material-icons {
     padding-left: 5px;
   }
@@ -8,6 +10,14 @@
   &.is-alt {
     background-color: $orange;
     border-color: $orange;
+    color: white;
+
+    &[disabled] {
+      background-color: $orange;
+      border-color: $orange;
+      box-shadow: none;
+      opacity: 0.5;
+    }
   }
 
   .is-borderless {
