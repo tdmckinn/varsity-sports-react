@@ -33,12 +33,12 @@ const NotFoundComponent = () => (
 )
 
 const Dashboard = React.lazy(() =>
-  import('./pages/dashboard/Dashboard' /* webpackChunkName: "dashboard" */)
+  import('./components/pages/dashboard/Dashboard' /* webpackChunkName: "dashboard" */)
 )
 // const UsersTeams = React.lazy(() =>
 //   import('./pages/teams/Teams' /* webpackChunkName: "my-team" */))
 // const Players = React.lazy(() =>
-//   import('./pages/AppPlayers' /* webpackChunkName: "players" */))
+//   import('./components/pages/players' /* webpackChunkName: "players" */))
 // const Research = React.lazy(() =>
 //   import('./pages/AppResearch' /* webpackChunkName: "research" */))
 // const TopDrafts = React.lazy(() =>
@@ -46,7 +46,7 @@ const Dashboard = React.lazy(() =>
 // const AppDraft = React.lazy(() =>
 //   import('./pages/AppDraft' /* webpackChunkName: "draft" */))
 const Leagues = React.lazy(() =>
-  import('./pages/league/Leagues' /* webpackChunkName: "leagues" */)
+  import('./components/pages/league/Leagues' /* webpackChunkName: "leagues" */)
 )
 // const NfxDraft = React.lazy(() =>
 //   import('./components/draft/NfxDraft' /* webpackChunkName: "nfx-draft-live" */))

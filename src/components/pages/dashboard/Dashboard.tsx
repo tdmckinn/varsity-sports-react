@@ -2,8 +2,8 @@ import * as React from 'react'
 import { format } from 'date-fns'
 import { useQuery } from 'urql';
 
-import { GameSchedule } from "../../types"
-import { DEFAULT_DATE_FORMAT } from '../../const'
+import { GameSchedule } from "../../../types"
+import { DEFAULT_DATE_FORMAT } from '../../../const'
 
 const today = format(new Date(), DEFAULT_DATE_FORMAT)
 

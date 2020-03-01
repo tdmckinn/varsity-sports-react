@@ -8,10 +8,10 @@ import {
   LeagueModiferModal,
   SectionHeader,
   Input,
-} from '../../components'
-import { getLeagues } from '../../queries/league'
-import { useStores } from '../../hooks/use-stores'
-import { ILeague } from '../../types'
+} from '../..'
+import { getLeagues } from '../../../queries/league'
+import { useStores } from '../../../hooks/use-stores'
+import { ILeague } from '../../../types'
 
 import './Leagues.scss'
 
