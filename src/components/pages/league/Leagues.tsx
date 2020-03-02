@@ -99,8 +99,7 @@ const Leagues = observer(() => {
                 showLeagueModiferModal(true)
               }}
             />
-          </p>
-        </div>
+          </p>\        </div>
       </nav>
       <section>
         {displayLeagues}

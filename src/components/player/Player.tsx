@@ -4,24 +4,13 @@ import { IPlayer } from '../../types'
 
 import './styles/Player.scss'
 
-// <i
-// :className="[isHovered || isPlayerOnMyWatchList ? 'fa-thumbs-up' : 'fa-thumbs-o-up']"
-// className="fa"
-// ></i>
-// :className="[isHovered || isPlayerOnMyWatchList ? 'fa-thumbs-up' : 'fa-thumbs-o-up']"
-// {/* <span className="icon is-small" @mouseover="isHovered = true" @mouseout="isHovered = false"> */}
-
 interface PlayerProps {
   onClick?: (player: IPlayer) => void
   player: IPlayer
 }
 
-const Player = ({onClick, player}: PlayerProps) => (
-  <div
-    v-if="player"
-    className="vsf-player box"
-    onClick={onClick as any}
-  >
+const Player = ({ onClick, player }: PlayerProps) => (
+  <div className="vsf-player box" onClick={onClick as any}>
     <article className="media">
       <div className="media-left">
         <figure className="image is-64x64">
@@ -51,33 +40,3 @@ const Player = ({onClick, player}: PlayerProps) => (
 )
 
 export default Player
-
-// {/* <script>
-// export default {
-//   name: 'vsf-player',
-//   props: {
-//     player: Object,
-//     onPlayerClicked: Function
-//   },
-//   data() {
-//     return {
-//       isHovered: false
-//     }
-//   },
-//   methods: {
-//     playerClicked() {
-//       if (this.onPlayerClicked) {
-//         this.onPlayerClicked(this.player)
-//       }
-//     }
-//   },
-//   computed: {
-//     isPlayerOnMyWatchList() {
-//       if (this.player) {
-//         return true
-//       }
-//       return false
-//     }
-//   }
-// }
-// </script>

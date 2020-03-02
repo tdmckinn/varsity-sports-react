@@ -35,8 +35,8 @@ const NotFoundComponent = () => (
 const Dashboard = React.lazy(() =>
   import('./components/pages/dashboard/Dashboard' /* webpackChunkName: "dashboard" */)
 )
-// const UsersTeams = React.lazy(() =>
-//   import('./pages/teams/Teams' /* webpackChunkName: "my-team" */))
+const UsersTeams = React.lazy(() =>
+  import('./components/pages/teams/Teams' /* webpackChunkName: "my-team" */))
 const Players = React.lazy(() =>
   import('./components/pages/players/Players' /* webpackChunkName: "players" */))
 // const TopDrafts = React.lazy(() =>
@@ -71,6 +71,7 @@ const App = observer(({ isUserDraftLoading }: AppProps) => {
                 <PrivateRoute path="/dashboard" component={Dashboard} />
                 <PrivateRoute path="/leagues" component={Leagues} />
                 <PrivateRoute path="/Players" component={Players} />
+                <PrivateRoute path="/teams" component={UsersTeams} />
                 <Route
                   path="/"
                   exact

@@ -56,3 +56,21 @@ export interface IPlayer {
   Name: string
   Rank: string
 }
+
+export interface UserPlayer {
+  id: number
+  TeamID: number
+  Name: string
+  Position: string
+  LineUpPosition: string
+}
+
+export interface IUserTeam {
+  id: number
+  LeagueID: number
+  Name: string
+  OwnerID: string
+  Players: [UserPlayer]
+  DateCreated: string
+  Picks: [number]
+}

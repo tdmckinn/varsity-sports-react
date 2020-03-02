@@ -2,10 +2,10 @@ import * as React from 'react'
 import { Field } from 'formik'
 import { useQuery } from 'urql'
 
-import './styles/LeagueSettings.scss'
-
 import { Input, FieldSet, Select, RadioControl } from '..'
 import { getSettings } from '../../queries/settings'
+
+import './styles/LeagueSettings.scss'
 
 interface SettingsConfig {
   id?: string

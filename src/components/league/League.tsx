@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { format, isPast } from 'date-fns'
-import { useMutation, cacheExchange } from 'urql'
+import { useMutation } from 'urql'
 import cx from 'classnames'
 
 import {

@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory } from 'react-router-dom'
 import { getYear } from 'date-fns'
-import { observer } from 'mobx-react'
+import { useObserver } from 'mobx-react'
 
 import Sidebar from './Sidebar'
 
@@ -16,20 +16,25 @@ const navBarItems = [
   { name: 'Players', route: '/players' },
   { name: 'Draft', route: '/draft' },
   {
-    name: 'Logout', isOnlyMobile: true, isDefault: true, route: '/logout',
-  }
+    name: 'Logout',
+    isOnlyMobile: true,
+    isDefault: true,
+    route: '/logout',
+  },
 ]
 
 const Header = () => {
-  const { authStore: {user, logout} } = useStores();
-  const history = useHistory();
+  const {
+    authStore: { user, logout },
+  } = useStores()
+  const history = useHistory()
 
   const handleLogoutClick = () => {
-    logout();
+    logout()
     history.push('/dashboard')
   }
 
-  return (
+  return useObserver(() => (
     <header className="vsf-header">
       <nav className="navbar">
         <a
@@ -51,16 +56,25 @@ const Header = () => {
         </div>
         {user.isLoggedIn ? (
           <div className="navbar-end navbar-menu">
-            {navBarItems.map(({ name, route, isOnlyMobile, isDefault }, index: number) => {
-              return !isOnlyMobile ? (
-                isDefault ? <a className="navbar-item" href="#" onClick={handleLogoutClick}>Logout</a> :
-                  <Link to={route} className="navbar-item" key={index}>
-                    {name}
-                  </Link>
-              ) : (
-                  null
-                )
-            })}
+            {navBarItems.map(
+              ({ name, route, isOnlyMobile, isDefault }, index: number) => {
+                return !isOnlyMobile ? (
+                  isDefault ? (
+                    <a
+                      className="navbar-item"
+                      href="#"
+                      onClick={handleLogoutClick}
+                    >
+                      Logout
+                    </a>
+                  ) : (
+                    <Link to={route} className="navbar-item" key={index}>
+                      {name}
+                    </Link>
+                  )
+                ) : null
+              }
+            )}
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link" href="#">
                 <img src={helmentIcon} />
@@ -68,18 +82,18 @@ const Header = () => {
               <div className="navbar-dropdown is-boxed">
                 <a className="navbar-item" href="#" onClick={handleLogoutClick}>
                   Logout
-              </a>
+                </a>
                 <a className="navbar-item">User: {user.fullName}</a>
               </div>
             </div>
           </div>
         ) : (
-            ''
-          )}
+          ''
+        )}
       </nav>
       <Sidebar navBarItems={navBarItems} />
     </header>
-  )
+  ))
 }
 
-export default observer(Header)
+export default Header
