@@ -137,7 +137,7 @@ const League = ({ league, children }: LeagueProps) => {
 
                   if (key === '__typename') return null
                   return (
-                    <div className="readonly-setting">
+                    <div key={key} className="readonly-setting">
                       <b>{key}</b>: {value}
                     </div>
                   )
