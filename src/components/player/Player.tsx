@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { IPlayer } from '../../types'
+
 import './styles/Player.scss'
 
 // <i
@@ -10,17 +12,15 @@ import './styles/Player.scss'
 // {/* <span className="icon is-small" @mouseover="isHovered = true" @mouseout="isHovered = false"> */}
 
 interface PlayerProps {
-  Name: string
-  Rank: string
+  onClick?: (player: IPlayer) => void
+  player: IPlayer
 }
 
-const Player = (player: PlayerProps) => (
+const Player = ({onClick, player}: PlayerProps) => (
   <div
     v-if="player"
     className="vsf-player box"
-    onClick={() => {
-      console.log('playerClicked')
-    }}
+    onClick={onClick as any}
   >
     <article className="media">
       <div className="media-left">

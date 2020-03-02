@@ -50,3 +50,9 @@ export interface ILeague {
   DateCreated: string
   IsDraftComplete: boolean
 }
+
+export interface IPlayer {
+  id: number
+  Name: string
+  Rank: string
+}

@@ -37,10 +37,8 @@ const Dashboard = React.lazy(() =>
 )
 // const UsersTeams = React.lazy(() =>
 //   import('./pages/teams/Teams' /* webpackChunkName: "my-team" */))
-// const Players = React.lazy(() =>
-//   import('./components/pages/players' /* webpackChunkName: "players" */))
-// const Research = React.lazy(() =>
-//   import('./pages/AppResearch' /* webpackChunkName: "research" */))
+const Players = React.lazy(() =>
+  import('./components/pages/players/Players' /* webpackChunkName: "players" */))
 // const TopDrafts = React.lazy(() =>
 //   import('./pages/AppTopDrafts' /* webpackChunkName: "top-drafts" */))
 // const AppDraft = React.lazy(() =>
@@ -72,6 +70,7 @@ const App = observer(({ isUserDraftLoading }: AppProps) => {
               <Switch>
                 <PrivateRoute path="/dashboard" component={Dashboard} />
                 <PrivateRoute path="/leagues" component={Leagues} />
+                <PrivateRoute path="/Players" component={Players} />
                 <Route
                   path="/"
                   exact
