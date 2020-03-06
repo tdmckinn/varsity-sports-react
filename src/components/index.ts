@@ -13,7 +13,7 @@ export { default as LeagueSettings } from './league/LeagueSettings'
 export { default as LeagueModiferModal } from './league/LeagueModiferModal'
 export { default as League } from './league/League'
 
-export { default as Draft } from './draft/Draft'
+export { default as LiveDraft } from './draft/LiveDraft'
 export { default as Login } from './login/Login'
 export { default as FieldSet } from './fieldset/Fieldset'
 export { default as Notification } from './notification/Notification'

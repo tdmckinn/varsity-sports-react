@@ -43,9 +43,10 @@ const joinLeague = `
 const League = ({ league, children }: LeagueProps) => {
   const {
     authStore: { user },
+    draftStore,
   } = useStores()
 
-  const [joinLeagueResponse, executeJoinLeagueMutation] = useMutation(
+  const [_joinLeagueResponse, executeJoinLeagueMutation] = useMutation(
     joinLeague
   )
   const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(
@@ -60,9 +61,7 @@ const League = ({ league, children }: LeagueProps) => {
     setJoinLeagueDisplay(true)
     setLeagueToJoinId(id)
   }
-  const editLeague = () => {
-    showLeagueModiferModal(true)
-  }
+  const editLeague = () => showLeagueModiferModal(true)
 
   const isLeagueCommissioner = league.CommissionerID === user.id
   const hasUserJoinedLeague =
@@ -70,8 +69,8 @@ const League = ({ league, children }: LeagueProps) => {
     league.LeagueTeams.some(
       (team: { OwnerID: string }) => team.OwnerID === user.id
     )
-  const draftDateTime = new Date(Number(league.DraftDateTime))
-  const isDraftPast = isPast(draftDateTime)
+  const draftStartDateTime = new Date(Number(league.DraftDateTime))
+  const isDraftPast = isPast(draftStartDateTime)
   const draftTimeLabelText = isDraftPast ? 'Draft Ended' : 'Draft Start'
 
   return (
@@ -89,14 +88,19 @@ const League = ({ league, children }: LeagueProps) => {
                 'is-coral': isDraftPast,
               })}
             >
-              {draftTimeLabelText}: {draftDate(draftDateTime)}
+              {draftTimeLabelText}: {draftDate(draftStartDateTime)}
             </span>
           </div>
 
           <div className="vsf-league__actions">
-            <Link className="button is-success" to={`/leagues/${league.id}`}>
+            <Link
+              className={cx('button is-success', {
+                'is-drafting': league.IsDrafting,
+              })}
+              to={`/${league.IsDrafting ? 'draft' : 'league-lobby' }/${league.id}`}
+            >
               <i className="material-icons">open_in_new</i>
-              League Lobby
+              {league.IsDrafting ? 'Enter Draft' : 'League Lobby'}
             </Link>
             <Button
               text="Join League"

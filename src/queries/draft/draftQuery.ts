@@ -1,4 +1,4 @@
-export const DraftQuery = `
+export const draftQuery = `
   query GetDraft($draftId: String!) {
     draft(draftId: $draftId) {
       id

@@ -1,14 +1,12 @@
 import { computed, observable, action } from 'mobx'
 
 export class DraftStore {
-  @observable draft = {
-    exitedDraft: false,
-    isUserDrafting: false,
-    isUserDraftLoading: false
-  }
+  @observable exitedDraft: boolean
+  @observable isUserDrafting: boolean = false
+  @observable isUserDraftLoading: boolean
 
   @action updateDraft() {
-    
+    this.isUserDrafting = true
   }
 }
 

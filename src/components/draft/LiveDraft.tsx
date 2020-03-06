@@ -1,17 +1,15 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { useMutation } from 'urql'
+import { observer } from 'mobx-react'
 
-import './styles/Draft.scss'
 import { Button } from '..'
 import DraftOrder from './DraftOrder'
+import { UserPlayer } from '../../types'
+import { useStores } from '../../hooks/use-stores'
+import { noop } from '../../utils/noop'
 
-interface Draft {
-  selectedPick: any
-  draftPickNumber: any
-  lastPick: any
-  players: any[]
-}
+import './styles/Draft.scss'
 
 const exitDraftMutation = `
 mutation($userId: String!, $draftId: String!) {
@@ -21,66 +19,32 @@ mutation($userId: String!, $draftId: String!) {
 }
 `
 
-const draftQuery = `
-query GetDraft($draftId: String!) {
-  draft(draftId: $draftId) {
-    id
-    LeagueID
-    CurrentRound
-    CurrentUserDrafting
-    DraftDateTime
-    IsDraftComplete
-    Rounds
-    Teams {
-      id
-      OwnerID
-      Name
-      Picks
-      Players {
-        id
-        Name
-        TeamID
-        LineUpPosition
-      }
-    }
-    Players {
-      id
-      Rank
-      Name
-      Position
-      Age
-      FantasyPoints
-      AverageDraftPosition
-    }
-  }
-}
-`
-
-const Draft = ({
-  selectedPick,
-  draftPickNumber = 1,
-  lastPick,
-  players,
-}: Draft) => {
-  const draft = { id: null, Teams: [] } as any
+const LiveDraft = observer(() => {
+  const {
+    authStore: { user },
+  } = useStores()
   const [myQueue, setQueue] = React.useState([])
-  // const selectedPick = {};
-  const leagueId = ''
-  const isUserDrafting = false
-  const user = {} as any
-  const teamsDraftingByRound = {}
-  const userTeam = '' as any
-  // tslint:disable-next-line:no-empty
-  const draftPlayer = () => {}
+  const [selectedPick, setSelectedPick] = React.useState<UserPlayer | null>(
+    null
+  )
+  const lastPick = selectedPick
+  const draftPickNumber = 1
+  const players = []
+  const draft = { id: null, Teams: [], players: [] } as any
 
-  const playerSelected = ({ id, Name, Position }: any) => {
-    selectedPick = {
+  const leagueId = 1
+  const teamsDraftingByRound = []
+  const userTeam = '' as any
+  const draftPlayer = noop
+
+  const playerSelected = ({ id, Name, Position }: UserPlayer) => {
+    setSelectedPick({
       id,
       Name,
+      Position: `QB`,
       LineUpPosition: `${Position}1`,
       TeamID: userTeam ? userTeam.id : null,
-      DraftID: draft.id,
-    }
+    })
   }
 
   const isPlayerQueued = (player: { id: any }) => {
@@ -126,16 +90,16 @@ const Draft = ({
         <div className="nfx-draft__queued-pick">
           <span>
             <i className="nfx-draft__queued-icon material-icons">person</i>
-            {!selectedPick.hasOwnProperty('id') ? (
-              <span>No Player Selected</span>
-            ) : null}
+            {!selectedPick ? <span>No Player Selected</span> : null}
             {selectedPick && selectedPick.Name}
           </span>
           <Button
             text="Draft Player"
-            onClick={draftPlayer}
+            onClick={() => {
+              draftPlayer()
+            }}
             alt
-            disabled={!selectedPick.hasOwnProperty('id')}
+            disabled={!selectedPick}
           />
         </div>
       </div>
@@ -165,7 +129,7 @@ const Draft = ({
             </tr>
           </thead>
           <tbody>
-            {draft.players((player: any) => {
+            {draft.players.map((player: any) => {
               return (
                 <tr key={player.id} onClick={() => playerSelected(player)}>
                   <th>
@@ -205,7 +169,7 @@ const Draft = ({
           <h3>My Picks</h3>
           <aside v-if="userTeam" className="menu">
             <ul className="menu-list">
-              {userTeam.Players.map((userPick: any, index: any) => (
+              {userTeam?.Players?.map((userPick: any, index: any) => (
                 <li
                   v-for="(userPick, index) in userTeam.Players"
                   key={`user_pick_${index}`}
@@ -236,6 +200,6 @@ const Draft = ({
       <div className="vsf-draft__footer">The Last Pick Was: {lastPick}</div>
     </div>
   )
-}
+})
 
-export default Draft;
+export default LiveDraft

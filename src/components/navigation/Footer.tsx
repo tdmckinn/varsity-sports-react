@@ -8,7 +8,7 @@ const Footer = ({ children }: { children?: any }) => (
       {children}
       <div className="content has-text-centered">
         <p>
-          <strong>Varsity Sports Fantasy</strong> by
+          <strong>Varsity Sports Fantasy</strong> by {' '}
           <a
             className="vsf-footer__user-link"
             href="https://tirellmckinnon.com"

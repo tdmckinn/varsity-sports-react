@@ -1,3 +1,10 @@
+export interface Draft {
+  selectedPick: any
+  draftPickNumber: any
+  lastPick: any
+  players: any[]
+}
+
 export interface Weather {
   type: string
   description: string
@@ -49,6 +56,7 @@ export interface ILeague {
   Users: any
   DateCreated: string
   IsDraftComplete: boolean
+  IsDrafting: boolean
 }
 
 export interface IPlayer {

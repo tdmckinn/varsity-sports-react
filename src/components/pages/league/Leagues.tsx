@@ -2,13 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import { useQuery } from 'urql'
 
-import {
-  Button,
-  League,
-  LeagueModiferModal,
-  SectionHeader,
-  Input,
-} from '../..'
+import { Button, League, LeagueModiferModal, SectionHeader, Input } from '../..'
 import { getLeagues } from '../../../queries/league'
 import { useStores } from '../../../hooks/use-stores'
 import { ILeague } from '../../../types'
@@ -21,12 +15,10 @@ const Leagues = observer(() => {
   const {
     authStore: { user },
   } = useStores()
-
   const [leagueNameQuery, setLeagueNameQuery] = React.useState('')
   const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(
     false
   )
-
   const [{ fetching, error, data }] = useQuery({
     query: getLeagues,
   })
@@ -42,19 +34,18 @@ const Leagues = observer(() => {
     leagues &&
     leagues.filter((league) => league.CommissionerID === user.id).length ===
       MAX_LEAGUES_PER_COMMISH
-
   const filterRegex = new RegExp(`^${leagueNameQuery}`)
-  const displayLeagues = leagues.filter(({ LeagueName }) => {
-    if (leagueNameQuery === '') return true
+  const displayLeagues = leagues
+    .filter(({ LeagueName }) => {
+      if (leagueNameQuery === '') return true
 
-    if (LeagueName.match(filterRegex)?.length > 0) {
-      return true;
-    }
+      if (LeagueName.match(filterRegex)?.length > 0) {
+        return true
+      }
 
-    return false
-  }).map((league, index: number) => (
-    <League key={index} league={league} />
-  ))
+      return false
+    })
+    .map((league, index: number) => <League key={index} league={league} />)
 
   return (
     <div className="vsf-app__leagues">
@@ -63,7 +54,8 @@ const Leagues = observer(() => {
         <div className="level-left">
           <div className="level-item">
             <p className="subtitle is-5">
-             <strong>{displayLeagues.length}</strong> of <strong>{leagues.length}</strong> League(s)
+              <strong>{displayLeagues.length}</strong> of{' '}
+              <strong>{leagues.length}</strong> League(s)
             </p>
           </div>
           <div className="level-item">

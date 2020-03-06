@@ -1,9 +1,7 @@
 import * as React from 'react'
 import {
   Route,
-  withRouter,
   Switch,
-  RouteComponentProps,
 } from 'react-router-dom'
 import { observer } from 'mobx-react'
 
@@ -12,12 +10,6 @@ import PrivateRoute from './router/PrivateRoute'
 import { useStores } from './hooks/use-stores'
 
 import './App.scss'
-
-interface AppProps extends RouteComponentProps<any>, React.Props<any> {
-  isUserDraftLoading?: boolean
-}
-
-interface AppState { }
 
 const NotFoundComponent = () => (
   <section className="hero">
@@ -36,20 +28,16 @@ const Dashboard = React.lazy(() =>
   import('./components/pages/dashboard/Dashboard' /* webpackChunkName: "dashboard" */)
 )
 const UsersTeams = React.lazy(() =>
-  import('./components/pages/teams/Teams' /* webpackChunkName: "my-team" */))
+  import('./components/pages/teams/Teams' /* webpackChunkName: "my-teams" */))
 const Players = React.lazy(() =>
   import('./components/pages/players/Players' /* webpackChunkName: "players" */))
-// const TopDrafts = React.lazy(() =>
-//   import('./pages/AppTopDrafts' /* webpackChunkName: "top-drafts" */))
-// const AppDraft = React.lazy(() =>
-//   import('./pages/AppDraft' /* webpackChunkName: "draft" */))
+const Draft = React.lazy(() =>
+  import('./components/pages/draft/Draft' /* webpackChunkName: "draft" */))
 const Leagues = React.lazy(() =>
   import('./components/pages/league/Leagues' /* webpackChunkName: "leagues" */)
 )
-// const NfxDraft = React.lazy(() =>
-//   import('./components/draft/NfxDraft' /* webpackChunkName: "nfx-draft-live" */))
 
-const App = observer(({ isUserDraftLoading }: AppProps) => {
+const App = observer(() => {
   const { authStore } = useStores();
 
   React.useEffect(() => {
@@ -59,6 +47,7 @@ const App = observer(({ isUserDraftLoading }: AppProps) => {
   }, [])
 
   const { authStore: { user } } = useStores();
+  const isUserDraftLoading = false;
 
   return (
     <>
@@ -72,6 +61,8 @@ const App = observer(({ isUserDraftLoading }: AppProps) => {
                 <PrivateRoute path="/leagues" component={Leagues} />
                 <PrivateRoute path="/Players" component={Players} />
                 <PrivateRoute path="/teams" component={UsersTeams} />
+                <PrivateRoute path="/league-lobby/:id" component={Draft} />
+                <PrivateRoute path="/draft/:id" component={Draft} />
                 <Route
                   path="/"
                   exact
@@ -102,4 +93,4 @@ const App = observer(({ isUserDraftLoading }: AppProps) => {
   )
 })
 
-export default withRouter(App)
+export default App

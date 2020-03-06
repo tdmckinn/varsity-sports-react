@@ -2,9 +2,10 @@ export const getLeagues = `
 query GetLeagues {
   leagues {
     id
+    IsDrafting
     DraftDateTime
-    LeagueName
     CommissionerID
+    LeagueName
     LeagueSettings {
       DraftType
       Scoring

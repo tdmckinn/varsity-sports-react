@@ -14,7 +14,7 @@ const navBarItems = [
   { name: 'My Teams', route: '/teams' },
   { name: 'Leagues', route: '/leagues' },
   { name: 'Players', route: '/players' },
-  { name: 'Draft', route: '/draft' },
+  // { name: 'Drafts', route: '/drafts' },
   {
     name: 'Logout',
     isOnlyMobile: true,

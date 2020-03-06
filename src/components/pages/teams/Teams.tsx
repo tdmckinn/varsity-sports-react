@@ -105,7 +105,7 @@ const Teams = observer(() => {
                     check your leagues draft time to get started.
                     <div>
                       <Link className="button has-background-warning" to="/leagues">
-                        View Leegues
+                        View Leagues
                       </Link>
                     </div>
                   </div>
