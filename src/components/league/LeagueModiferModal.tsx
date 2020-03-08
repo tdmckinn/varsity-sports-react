@@ -10,7 +10,7 @@ import { Button, Modal, FieldSet, Input, DatePicker, LeagueSettings } from '..'
 import { useStores } from '../../hooks/use-stores'
 import { ILeague } from '../../types'
 
-const createLeagueMutationQuery = `
+const createLeagueGQL = `
   mutation($league: CreateLeagueInput!) {
     createLeague(league: $league) {
       id
@@ -20,7 +20,7 @@ const createLeagueMutationQuery = `
   }
 `
 
-const updateLeagueSettingsMutationQuery = `
+const updateLeagueSettingsGQL = `
   mutation($settings: UpdateLeagueSettingsInput!) {
     updateLeagueSettings(settings: $settings) {
       id
@@ -40,28 +40,26 @@ const LeagueModifierModal = observer(
       authStore: { user },
     } = useStores()
 
-    const [_result, createLeagueMutation] = useMutation(
-      createLeagueMutationQuery
+    const [_createLeagueRes, createLeagueMutation] = useMutation(
+      createLeagueGQL
     )
-    const [__result, updateLeagueSettingsMutation] = useMutation(
-      updateLeagueSettingsMutationQuery
-    )
+    const [
+      __updateLeagueSettingsRes,
+      updateLeagueSettingsMutation,
+    ] = useMutation(updateLeagueSettingsGQL)
 
     const [league, setLeague] = React.useState({
       id: selectedLeague?.id,
       isSettingsEditMode: type === 'editLeague',
       leagueSettings: selectedLeague?.LeagueSettings ?? {},
-      leagueName: selectedLeague?.LeagueName ?? "",
-      draftDateTime: selectedLeague?.DraftDateTime ?? "",
-      teamName: "",
+      leagueName: selectedLeague?.LeagueName ?? '',
+      draftDateTime: selectedLeague?.DraftDateTime ?? '',
+      teamName: '',
       commissionerName: user.fullName,
     })
 
     const userCreateLeague = (leagueFormValues: any) => {
       console.log(leagueFormValues)
-      /**
-       * TODO: Validations
-       */
       const newLeague = {
         CommissionerID: user.id,
         LeagueName: leagueFormValues.leagueName,
@@ -94,6 +92,7 @@ const LeagueModifierModal = observer(
 
       console.log(updatedLeagueSettings)
 
+      // eslint-disable-next-line no-underscore-dangle
       delete updatedLeagueSettings.__typename
 
       updateLeagueSettingsMutation({
@@ -127,9 +126,9 @@ const LeagueModifierModal = observer(
             </p>
             <Formik
               initialValues={{
-               ...league
+                ...league,
               }}
-              onSubmit={async ({teamName, ...values }) => {
+              onSubmit={async ({ teamName, ...values }) => {
                 // if (!isValidForm) {
                 //   alert('Form invalid please fix errors to continue.')
                 // }
@@ -140,7 +139,7 @@ const LeagueModifierModal = observer(
                 } else {
                   userCreateLeague({
                     teamName,
-                    ...values
+                    ...values,
                   })
                 }
               }}

@@ -77,7 +77,6 @@ const LeagueSettings = ({ leagueSettings }: any) => {
                         name={`leagueSettings.${id}`}
                       />
                     )
-                    break
                   case 'other':
                     return (
                       <Field

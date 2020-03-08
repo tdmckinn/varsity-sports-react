@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useHistory } from 'react-router-dom'
 import classNames from 'classnames'
 import { useMutation } from 'urql'
 import { observer } from 'mobx-react'
@@ -9,9 +10,9 @@ import { UserPlayer } from '../../types'
 import { useStores } from '../../hooks/use-stores'
 import { noop } from '../../utils/noop'
 
-import './styles/Draft.scss'
+import './styles/LiveDraft.scss'
 
-const exitDraftMutation = `
+const exitDraftQGL = `
 mutation($userId: String!, $draftId: String!) {
   exitDraftSession(user: $user, draftId: $id) {
     success
@@ -19,20 +20,54 @@ mutation($userId: String!, $draftId: String!) {
 }
 `
 
+const enterDraftGQL = `
+  mutation($leagueId: String!) {
+    enteredDraft(leagueId: $leagueId) {
+      LeagueID
+      CurrentRound
+      CurrentUserDrafting
+      DraftDateTime
+      IsDraftComplete
+      Rounds
+      Teams {
+        id
+        OwnerID
+        Name
+        Picks
+        Players {
+          id
+          Name
+        }
+      }
+    }
+  }
+`
 const LiveDraft = observer(() => {
   const {
     authStore: { user },
   } = useStores()
+  const history = useHistory()
   const [myQueue, setQueue] = React.useState([])
   const [selectedPick, setSelectedPick] = React.useState<UserPlayer | null>(
     null
   )
+  const [_enterDraftRes, enterDraft] = useMutation(enterDraftGQL)
+  const [_exitDraftRes, exitDraft] = useMutation(exitDraftQGL)
+
+  React.useEffect(() => {
+    // enterDraft({
+    //   leagueId: league.id,
+    // }).then(({ data: { enteredDraft } }: any) => {
+    //   if (enteredDraft) {
+    //     history.push(`/draft/${league.id}`)
+    //   }
+    // })
+  }, [])
+
   const lastPick = selectedPick
   const draftPickNumber = 1
-  const players = []
   const draft = { id: null, Teams: [], players: [] } as any
 
-  const leagueId = 1
   const teamsDraftingByRound = []
   const userTeam = '' as any
   const draftPlayer = noop
@@ -71,25 +106,25 @@ const LiveDraft = observer(() => {
     return queue
   }
 
-  const [__res, executeExitDraftMutation] = useMutation(exitDraftMutation)
-
   return (
     <div className="vsf-draft">
-      {/* <div className="vsf-draft__sticky">Hello</div> */}
-      <div className="nfx-draft__exit">
+      <div className="vsf-draft__exit">
         <Button
           text="Exit Draft"
           onClick={() => {
-            executeExitDraftMutation({ userId: user.id, draftId: 1 })
+            // eslint-disable-next-line no-restricted-globals
+            confirm('Are you sure you want to exit the draft?')
+            history.push('/leagues')
+            // exitDraft({ userId: user.id, draftId: 1 })
           }}
         >
           <i className="material-icons">exit_to_app</i>
         </Button>
       </div>
-      <div className="nfx-draft__header">
-        <div className="nfx-draft__queued-pick">
+      <div className="vsf-draft__header">
+        <div className="vsf-draft__queued-pick">
           <span>
-            <i className="nfx-draft__queued-icon material-icons">person</i>
+            <i className="vsf-draft__queued-icon material-icons">person</i>
             {!selectedPick ? <span>No Player Selected</span> : null}
             {selectedPick && selectedPick.Name}
           </span>
@@ -103,7 +138,7 @@ const LiveDraft = observer(() => {
           />
         </div>
       </div>
-      <section className="nfx-draft__content">
+      <section className="vsf-draft__content">
         <table className="table">
           <thead>
             <tr>
@@ -136,7 +171,7 @@ const LiveDraft = observer(() => {
                     <i
                       onClick={() => toggleQueuedPlayer(player)}
                       className={classNames(
-                        'nfx-draft__star-icon material-icons',
+                        'vsf-draft__star-icon material-icons',
                         {
                           'is-active': isPlayerQueued(player),
                         }

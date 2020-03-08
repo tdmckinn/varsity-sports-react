@@ -10,15 +10,13 @@ import App from './App'
 
 import './index.scss'
 
-// import * as serviceWorker from './serviceWorker'
-
 configure({ enforceActions: 'observed' })
 
 ReactDOM.render(
   <UrqlProvider value={client}>
-      <Router history={createBrowserHistory()}>
-        <App />
-      </Router>
+    <Router history={createBrowserHistory()}>
+      <App />
+    </Router>
   </UrqlProvider>,
   document.getElementById('root')
 )

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { format, isPast } from 'date-fns'
 import { useMutation } from 'urql'
 import cx from 'classnames'
@@ -30,7 +30,7 @@ const draftDate = (date: Date) => {
   return format(new Date(Number(date)), DRAFT_DATE_TIME_FORMAT)
 }
 
-const joinLeague = `
+const joinLeagueGQL = `
   mutation($input: JoinLeagueInput!) {
     joinLeague(input: $input) {
       id
@@ -45,10 +45,8 @@ const League = ({ league, children }: LeagueProps) => {
     authStore: { user },
     draftStore,
   } = useStores()
-
-  const [_joinLeagueResponse, executeJoinLeagueMutation] = useMutation(
-    joinLeague
-  )
+  const history = useHistory()
+  const [_joinLeagueResponse, joinLeague] = useMutation(joinLeagueGQL)
   const [isLeagueModiferModalActive, showLeagueModiferModal] = React.useState(
     false
   )
@@ -57,11 +55,11 @@ const League = ({ league, children }: LeagueProps) => {
   const [leagueToJoinId, setLeagueToJoinId] = React.useState('')
   const [newTeam, setNewTeam] = React.useState({ name: '' })
 
-  const displayJoinLeagueModal = (id: any) => {
+  const displayJoinLeagueModal = (id: number) => {
     setJoinLeagueDisplay(true)
-    setLeagueToJoinId(id)
+    setLeagueToJoinId(id.toString())
   }
-  const editLeague = () => showLeagueModiferModal(true)
+  const handleEditLeagueClick = () => showLeagueModiferModal(true)
 
   const isLeagueCommissioner = league.CommissionerID === user.id
   const hasUserJoinedLeague =
@@ -93,15 +91,23 @@ const League = ({ league, children }: LeagueProps) => {
           </div>
 
           <div className="vsf-league__actions">
-            <Link
-              className={cx('button is-success', {
-                'is-drafting': league.IsDrafting,
-              })}
-              to={`/${league.IsDrafting ? 'draft' : 'league-lobby' }/${league.id}`}
-            >
-              <i className="material-icons">open_in_new</i>
-              {league.IsDrafting ? 'Enter Draft' : 'League Lobby'}
-            </Link>
+            {league.IsDrafting ? (
+              <Link
+                className={cx('button is-success is-drafting')}
+                to={`/draft/${league.id}`}
+              >
+                <i className="material-icons">open_in_new</i>
+                {'Enter Draft'}
+              </Link>
+            ) : (
+              <Link
+                className={cx('button is-success')}
+                to={`/league-lobby/${league.id}`}
+              >
+                <i className="material-icons">open_in_new</i>
+                {'League Lobby'}
+              </Link>
+            )}
             <Button
               text="Join League"
               onClick={() => displayJoinLeagueModal(league.id)}
@@ -111,7 +117,7 @@ const League = ({ league, children }: LeagueProps) => {
             {isLeagueCommissioner ? (
               <Button
                 text="Edit League"
-                onClick={() => editLeague()}
+                onClick={() => handleEditLeagueClick()}
                 classes="has-background-info"
               />
             ) : null}
@@ -200,7 +206,7 @@ const League = ({ league, children }: LeagueProps) => {
                     console.log('Must enter team name')
                     return false
                   }
-                  executeJoinLeagueMutation({
+                  joinLeague({
                     id: leagueToJoinId,
                     LeagueID: newTeam,
                     OwnerID: user.id,
