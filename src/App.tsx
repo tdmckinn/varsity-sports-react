@@ -1,8 +1,5 @@
-import * as React from 'react'
-import {
-  Route,
-  Switch,
-} from 'react-router-dom'
+import React from 'react'
+import { Route, Switch } from 'react-router-dom'
 import { observer } from 'mobx-react'
 
 import { Header, Footer, LoadingSpinner, Login } from './components'
@@ -25,29 +22,37 @@ const NotFoundComponent = () => (
 )
 
 const Dashboard = React.lazy(() =>
-  import('./components/pages/dashboard/Dashboard' /* webpackChunkName: "dashboard" */)
+  import(
+    './components/pages/dashboard/Dashboard' /* webpackChunkName: "dashboard" */
+  )
 )
 const UsersTeams = React.lazy(() =>
-  import('./components/pages/teams/Teams' /* webpackChunkName: "my-teams" */))
+  import('./components/pages/teams/Teams' /* webpackChunkName: "my-teams" */)
+)
 const Players = React.lazy(() =>
-  import('./components/pages/players/Players' /* webpackChunkName: "players" */))
+  import('./components/pages/players/Players' /* webpackChunkName: "players" */)
+)
 const Draft = React.lazy(() =>
-  import('./components/pages/draft/Draft' /* webpackChunkName: "draft" */))
+  import('./components/pages/draft/Draft' /* webpackChunkName: "draft" */)
+)
 const Leagues = React.lazy(() =>
   import('./components/pages/league/Leagues' /* webpackChunkName: "leagues" */)
 )
 
 const App = observer(() => {
-  const { authStore } = useStores();
+  const { authStore } = useStores()
 
   React.useEffect(() => {
     if (authStore) {
       authStore.login()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const { authStore: { user } } = useStores();
-  const isUserDraftLoading = false;
+  const {
+    authStore: { user },
+  } = useStores()
+  const isUserDraftLoading = false
 
   return (
     <>
@@ -63,20 +68,16 @@ const App = observer(() => {
                 <PrivateRoute path="/teams" component={UsersTeams} />
                 <PrivateRoute path="/league-lobby/:id" component={Draft} />
                 <PrivateRoute path="/draft/:id" component={Draft} />
-                <Route
-                  path="/"
-                  exact
-                  render={(props) => <Dashboard />}
-                />
+                <Route path="/" exact render={(props) => <Dashboard />} />
                 <Route path="*" exact component={NotFoundComponent} />
               </Switch>
             </React.Suspense>
           </main>
         ) : (
-            <main className="vsf-app__main--login">
-              <Login />
-            </main>
-          )}
+          <main className="vsf-app__main--login">
+            <Login />
+          </main>
+        )}
         <Footer />
         {isUserDraftLoading ? (
           <div className="vsf-loading--fullscreen">
@@ -85,8 +86,8 @@ const App = observer(() => {
             <LoadingSpinner />
           </div>
         ) : (
-            ''
-          )}
+          ''
+        )}
       </div>
       <div id="vsf-modal-root" data-cy="vs-modal-root" />
     </>

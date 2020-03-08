@@ -23,5 +23,4 @@ export { default as Modal } from './portal/Modal'
 export { default as LoadingSpinner } from './svgs/Loading'
 export { default as ThemeMusic } from './theme-music/ThemeMusic'
 
-// export { default as RadioControl } from './RadioControl'
 // export { default as PlayerModal } from './player/PlayerModal'

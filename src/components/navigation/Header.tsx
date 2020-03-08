@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { getYear } from 'date-fns'
@@ -77,7 +78,7 @@ const Header = () => {
             )}
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link" href="#">
-                <img src={helmentIcon} />
+                <img src={helmentIcon} alt="logo" />
               </a>
               <div className="navbar-dropdown is-boxed">
                 <a className="navbar-item" href="#" onClick={handleLogoutClick}>

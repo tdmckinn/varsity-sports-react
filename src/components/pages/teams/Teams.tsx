@@ -104,7 +104,10 @@ const Teams = observer(() => {
                     Looks like you have don't players on your team yet, please
                     check your leagues draft time to get started.
                     <div>
-                      <Link className="button has-background-warning" to="/leagues">
+                      <Link
+                        className="button has-background-warning"
+                        to="/leagues"
+                      >
                         View Leagues
                       </Link>
                     </div>

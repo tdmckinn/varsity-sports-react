@@ -40,10 +40,13 @@ const LeagueModifierModal = observer(
       authStore: { user },
     } = useStores()
 
-    const [_result, createLeagueMutation] = useMutation(createLeagueGQL)
-    const [__result, updateLeagueSettingsMutation] = useMutation(
-      updateLeagueSettingsGQL
+    const [_createLeagueRes, createLeagueMutation] = useMutation(
+      createLeagueGQL
     )
+    const [
+      __updateLeagueSettingsRes,
+      updateLeagueSettingsMutation,
+    ] = useMutation(updateLeagueSettingsGQL)
 
     const [league, setLeague] = React.useState({
       id: selectedLeague?.id,
@@ -57,9 +60,6 @@ const LeagueModifierModal = observer(
 
     const userCreateLeague = (leagueFormValues: any) => {
       console.log(leagueFormValues)
-      /**
-       * TODO: Validations
-       */
       const newLeague = {
         CommissionerID: user.id,
         LeagueName: leagueFormValues.leagueName,
@@ -92,6 +92,7 @@ const LeagueModifierModal = observer(
 
       console.log(updatedLeagueSettings)
 
+      // eslint-disable-next-line no-underscore-dangle
       delete updatedLeagueSettings.__typename
 
       updateLeagueSettingsMutation({

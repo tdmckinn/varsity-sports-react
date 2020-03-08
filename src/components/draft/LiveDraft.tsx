@@ -51,8 +51,8 @@ const LiveDraft = observer(() => {
   const [selectedPick, setSelectedPick] = React.useState<UserPlayer | null>(
     null
   )
-  const [_enterDraftResponse, enterDraft] = useMutation(enterDraftGQL)
-  const [__res, exitDraft] = useMutation(exitDraftQGL)
+  const [_enterDraftRes, enterDraft] = useMutation(enterDraftGQL)
+  const [_exitDraftRes, exitDraft] = useMutation(exitDraftQGL)
 
   React.useEffect(() => {
     // enterDraft({
@@ -66,10 +66,8 @@ const LiveDraft = observer(() => {
 
   const lastPick = selectedPick
   const draftPickNumber = 1
-  const players = []
   const draft = { id: null, Teams: [], players: [] } as any
 
-  const leagueId = 1
   const teamsDraftingByRound = []
   const userTeam = '' as any
   const draftPlayer = noop
@@ -114,6 +112,7 @@ const LiveDraft = observer(() => {
         <Button
           text="Exit Draft"
           onClick={() => {
+            // eslint-disable-next-line no-restricted-globals
             confirm('Are you sure you want to exit the draft?')
             history.push('/leagues')
             // exitDraft({ userId: user.id, draftId: 1 })

@@ -5,7 +5,7 @@ const RadioControl = ({ options, ...props }: any) => {
   const [field, _meta, helpers] = useField(props) as any
   return (
     <div className="control">
-      {options.map(({ id, value}: any, index) => {
+      {options.map(({ id, value }: any, index) => {
         return (
           <label className="radio" key={id ?? index}>
             <input

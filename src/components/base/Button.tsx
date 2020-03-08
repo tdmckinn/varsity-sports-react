@@ -12,9 +12,9 @@ interface ButtonProps {
   onClick?: () => void
   disabled?: boolean
   title?: string
-  icon?:  JSX.Element | string
+  icon?: JSX.Element | string
   style?: any
-  type?: string
+  type?: 'submit' | 'reset' | 'button'
 }
 
 const Button = ({
@@ -47,7 +47,7 @@ const Button = ({
         {
           'is-borderless': borderless,
           'is-primary': !alt,
-          'is-alt': alt
+          'is-alt': alt,
         },
         classes
       )}

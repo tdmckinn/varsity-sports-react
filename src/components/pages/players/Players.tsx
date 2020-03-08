@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import * as React from 'react'
 import { useQuery } from 'urql'
 
@@ -9,14 +10,12 @@ import Modal from '../../portal/Modal'
 
 import './Players.scss'
 
-/* tslint:disable:no-empty */
-const PlayerModal = ({
-  close,
-  player
-}: {
+interface IPlayerModal {
   player: IPlayer
   close: () => void
-}) => {
+}
+
+const PlayerModal = ({ close, player }: IPlayerModal) => {
   const removePlayer = () => {}
   const addPlayer = () => {}
   const isPlayerOnMyWatchList = false
@@ -35,9 +34,9 @@ const PlayerModal = ({
         ) : null}
         <footer className="modal-card-foot">
           {!isPlayerOnMyWatchList ? (
-            <a className="button is-success" onClick={addPlayer}>
+            <Button classes="button is-success" onClick={addPlayer}>
               Add Player
-            </a>
+            </Button>
           ) : (
             <>
               <Button classes="button is-danger" onClick={removePlayer}>
